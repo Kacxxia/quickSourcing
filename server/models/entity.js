@@ -18,17 +18,7 @@ const entitySchema = new Schema({
             required: true
         }
     }],
-    tags: [{
-        lang: {
-            type:String,
-            required: true
-        },
-        content: [{
-            type:String,
-            index:true,
-            required: true
-        }]
-    }],
+    tags: [String],
     children: [{
         type: Schema.Types.ObjectId,
         ref: 'Entity'
@@ -37,7 +27,7 @@ const entitySchema = new Schema({
         lang: String,
         content: String
     }],
-    resource: resourceSchema,
+    resource: [resourceSchema],
     good: {type: Number, default: 0},
     bad: {type: Number, default: 0},
     outdated: {type: Number, default: 0},
@@ -51,17 +41,16 @@ const entitySchema = new Schema({
 
 class entity {
     static getAllTags() {
-        return this.distinct('tags.content')
+        return this.distinct('tags')
     }
     static getAllNames() {
         return this.distinct('names.content')
     }
     static getBriefEntities () {
-        return this.find({}, { _id: 1, names: 1, tags: 1})
+        return this.find({}, { _id: 1, names: 1, tags: 1, introduction: 1})
     }
 }
 entitySchema.loadClass(entity)
 
-entitySchema.index({"names.content": 1, "tags.content": 1})
 
 export default mongoose.model("Entity", entitySchema)

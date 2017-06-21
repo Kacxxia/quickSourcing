@@ -36,3 +36,19 @@ export const tagSelector = createSelector(
 
 )
 
+export function translateCategory(category) {
+    const obj = {
+        'website': '网站',
+        'community': '社区',
+        'article': '文章',
+        'book': '书籍',
+        'other': '其他',
+        '网站': 'website',
+        '文章': 'article',
+        '社区': 'community',
+        '书籍': 'book',
+        '其他': 'other'
+    }
+    return obj[category]
+}
+

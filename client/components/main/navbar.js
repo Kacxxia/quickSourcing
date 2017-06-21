@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import AppBar from 'material-ui/AppBar'
 
 class Navbar extends Component {
     renderIconBar() {
@@ -16,16 +17,8 @@ class Navbar extends Component {
             padding: `0 1rem`
         }
         return (
-            <nav>
-                <div className="nav-wrapper yellow lighten-2 grey-text text-darken-3" style={navStyle}>
-                    <Link to="/" className="brand-logo">Logo</Link>
-                    <ul id="nav-mobile" className="right hide-on-med-and-down">
-                        {this.renderIconBar().map((value, i) => {
-                            return <li key={i} >{value}</li>
-                        })}
-                    </ul>
-                </div>
-            </nav>
+            <AppBar title="quickSourcing" iconClassNameRight="muidocs-icon-navigation-expand-more"
+            />
         );
     }
 }

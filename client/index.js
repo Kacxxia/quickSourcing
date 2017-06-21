@@ -1,8 +1,11 @@
+import 'babel-polyfill'
 import React from "react"
 import ReactDOM from "react-dom"
 
 import { Provider } from "react-redux"
 import { createStore, applyMiddleware, compose } from "redux"
+
+import ReduxThunk from 'redux-thunk'
 
 import { Route } from "react-router-dom"
 import { ConnectedRouter,  routerMiddleware } from 'react-router-redux'
@@ -13,8 +16,13 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 
 import { reduxSearch } from 'redux-search'
 
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import injectTagEventPlugin from 'react-tap-event-plugin'
+
 import rootReducer from "./reducers/root-reducer"
 import App from "./components/app"
+
+injectTagEventPlugin()
 
 const searchEnhancer = reduxSearch({
     resourceIndexes: {
@@ -22,9 +30,7 @@ const searchEnhancer = reduxSearch({
             for (let i in resources) {
                 resources[i].tags.forEach(
                     tag => {
-                        tag.content.forEach((co) => {
-                            indexDocument(resources[i].id, co)
-                        })
+                            indexDocument(resources[i].id, tag)
                     }
                 )
             }
@@ -37,6 +43,7 @@ const searchEnhancer = reduxSearch({
 const history = createHistory()       
 const enhancer = composeWithDevTools(
     applyMiddleware(routerMiddleware(history)),
+    applyMiddleware(ReduxThunk),
     searchEnhancer
 )
         
@@ -44,8 +51,10 @@ const store = createStore(rootReducer,  enhancer)
 
 ReactDOM.render(
     <Provider store={store}>                    
-        <ConnectedRouter history={history}  >   
-            <Route path="/" component={App} />  
+        <ConnectedRouter history={history}  >
+            <MuiThemeProvider >   
+                <Route path="/" component={App} />  
+            </MuiThemeProvider>
         </ConnectedRouter>   
     </Provider>,
     document.getElementById('app')

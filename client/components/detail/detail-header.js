@@ -3,14 +3,14 @@ import { connect } from 'react-redux'
 
 import BreadCrumbs from '../general/bread-crumbs'
 import ToolBar from './tool-bar'
-const DetailHeader = ({locationList}) => {
+const DetailHeader = () => {
     return (
-        <div className='row'>
-            <div className='col s8 m6' >
-                <BreadCrumbs locationList={locationList}/>
+        <div className='row h-100' style={{marginBottom: 0}}>
+            <div className='col-8 col-sm-8 h-100' >
+                <BreadCrumbs />
             </div>
-            <div className='col s4 m6'>
-                <div className='right'><ToolBar /></div>
+            <div className='col-4 col-sm-4 h-100'>
+                <ToolBar />
             </div>
         </div>
     );

@@ -1,23 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import TagSearchBar from '../general/tag-search-bar'
+
+
+import TagSearchBarMain from '../general/tag-search-bar-main'
+
 class Home extends Component {
     render() {
-        const homeClass = 'd-flex flex-column justify-content-center h-100'
-        const containerStyle = {
-            position: 'relative',
-            bottom: `4rem`
+        const homeStyle = {
+            padding: `2rem 2rem`,
+            verticalAlign: 'middle',
+            height: `calc(100% - 4rem)`
         }
+        const homeClass = 'd-flex flex-column justify-content-center align-items-center'
         return (
-            <div className={homeClass}>
-                <div className="container" style={containerStyle}>
-                    <h1 className='center-align' style={{height: `20%`}}>
-                        LOGO
+            <div className={homeClass} style={homeStyle}>
+                    <h1  style={{height: `10%`, margin: 0}}>
+                        quickSourcing
                     </h1>
-                    <div style={{height: `10%`}} >
-                        <TagSearchBar />
+                    <div style={{height: `10%`, width: '80%'}} >
+                        <TagSearchBarMain />
                     </div>
-                </div>
             </div>
         );
     }

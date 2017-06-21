@@ -3,11 +3,10 @@ const mongoose = require('mongoose'),
 
 const resourceSchema = new Schema({
     name: {type: String, required: true},
-    lang: {type: String, required: true},
     href: {type: String, required: true},
-    level: {type: String, required: true},
+    category: {type: String, required: true},
+    lang: String,
     translationHref: String,
-    categroy: String,
     introduction: String,
     good: {type: Number, default: 0},
     bad: {type: Number, default: 0},

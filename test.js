@@ -1,3 +1,5 @@
+let a = [1, 2, 3, 4]
 
-
-console.log(Math.ceil(0/8))
+for(let i in a) {
+    console.log(a[i])
+}

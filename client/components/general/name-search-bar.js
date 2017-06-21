@@ -1,27 +1,36 @@
 import React from 'react';
-
-const NameSearchBar = () => {
-    const iconStyle = {
-            position: "absolute",
-            right: 0,
-            bottom: "25%"
-        }
-    const inputStyle = {
-        margin: 0,
-        border: `none`,
-        boxShadow: 'none',
-        padding: `0 1rem`
-    }
-    const cardStyle = {
-        display: 'inline-block'
-    }
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
+import Paper from 'material-ui/Paper'
+import TextField from 'material-ui/TextField'
+import { updateNameFilter } from '../../actions/main'
+const NameSearchBar = ({onUpdateNameFilter, nameFilterValue}) => {
     return (
-        <div className='center-align'>
-            <div className="card" style={cardStyle}>
-                <input id="search" placeholder='按名称过滤结果' style={inputStyle}/>
-            </div>
+        <div className='d-flex justify-content-center' >
+            <Paper style={{padding: `0 1rem`}}>
+                <TextField 
+                    hintText='输入名称以过滤'
+                    onChange={(e, text) => {onUpdateNameFilter(text)}}
+                    value={nameFilterValue}
+                    underlineShow={false}
+                />
+            </Paper>
         </div>
     );
 };
 
-export default NameSearchBar;
+export default connect((state) => {
+    return {
+        nameFilterValue: state.searchResource.nameFilter
+    }
+},(dispatch) => {
+    return {
+        onUpdateNameFilter: (value) => dispatch(updateNameFilter(value))
+    }
+})(NameSearchBar);
+
+
+NameSearchBar.propTypes = {
+    nameFilterValue: PropTypes.string.isRequired,
+    onUpdateNameFilter: PropTypes.func.isRequired
+}

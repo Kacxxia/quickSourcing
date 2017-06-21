@@ -1,51 +1,60 @@
 import React from 'react';
+import PropTypes from 'prop-types'
+import FlatButton from 'material-ui/FlatButton'
+import ChevronLeft from 'material-ui/svg-icons/navigation/chevron-left'
+import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right'
 
 const Pagination = ({
     length,
-    currentPage
+    currentPage,
+    onNextPage,
+    onPrevPage,
+    onSpecPage
 }) => {
     let displayPages = chooseDisplayPages()
-    let leftClass = '', 
-        rightClass = ''
+    let leftDisabled = false, 
+        rightDisabled = false
 
-    if(currentPage == 1) { leftClass += ' disabled'}
-    if(currentPage == displayPages) { rightClass += ' disabled'}
+    if(currentPage == 1) { leftDisabled = true}
+    if(currentPage >= length) { rightDisabled = true}
 
-    let pages = []
-    
-    computePages(pages, currentPage, length, displayPages)
+    let pages = computePages(currentPage, length, displayPages)
 
-    const containerStyle = {
-        margin: 0
-    }
     return (
-        <ul className="pagination center-align" style={containerStyle}>
-            <li className={leftClass}>
-                <a><i className="material-icons">chevron_left</i></a>
-            </li>
-            {show(pages, currentPage)}
-            <li className={rightClass}>
-                <a><i className="material-icons">chevron_right</i></a>
-            </li>
-        </ul>
+        <div className="d-flex justify-content-center" >
+            <FlatButton 
+                icon={<ChevronLeft /> }
+                onTouchTap={() => onPrevPage()}
+                disabled={leftDisabled}
+            />
+            {pages.map((page) => {
+                return <FlatButton 
+                    onTouchTap={() => onSpecPage(page)} 
+                    label={page}
+                    primary={page === currentPage} 
+                    key={page}/>
+            })}
+            <FlatButton 
+                icon={<ChevronRight /> }
+                onTouchTap={() => onNextPage()}
+                disabled={rightDisabled}
+            />
+        </div>
     );
 };
 
 export default Pagination;
 
-function show(pages, currentPage) {
-    return pages.map((page, index) => {
-        let liClass = ''
-        if(page === currentPage) {
-            liClass += ' active'
-        } else {
-            liClass += ' waves-effect'
-        }
-        return <li key={index} className={liClass}><a>{page}</a></li>
-    })
+Pagination.propTypes = {
+    length: PropTypes.number.isRequired,
+    currentPage: PropTypes.number.isRequired,
+    onNextPage: PropTypes.func.isRequired,
+    onPrevPage: PropTypes.func.isRequired,
+    onSpecPage: PropTypes.func.isRequired
 }
 
-function computePages(pages, currentPage, length, displayPages) { 
+function computePages(currentPage, length, displayPages) { 
+    let pages = []
     const   half = (displayPages-1)/2,
        rest = length - currentPage
     if (length <= displayPages) {
@@ -69,6 +78,7 @@ function computePages(pages, currentPage, length, displayPages) {
             }
         }
     }
+    return pages
 }
 
 function chooseDisplayPages() {

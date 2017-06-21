@@ -1,18 +1,9 @@
 import React from 'react';
 
 const Footer = () => {
-    const footerStyle = {
-        width: `100%`,
-        heigt: `4rem`
-    }
     return (
-        <foot className="page-footer" style={footerStyle}>
-            <div className="footer-copyright" >
-                <div className="container">
-                © 2017 Copyright 
-                <a className="grey-text text-lighten-4 right" href="#!">More Links</a>
-                </div>
-            </div>
+        <foot  className='h-100 px-1 d-flex align-items-center' >
+            Copyright 2017
         </foot>
     );
 };
