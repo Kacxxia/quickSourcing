@@ -11,9 +11,5 @@ const commentSchema = new Schema({
     likes: {type: Number, default: 0},
     dislikes: {type: Number, default: 0}
 })
-commentSchema.pre("save", (next) => {
-    this.date = new Date
-    next()
-})
 
 module.exports = commentSchema

@@ -7,32 +7,18 @@ const mongoose = require('mongoose'),
 mongoose.Promise = global.Promise
 
 const entitySchema = new Schema({
-    names: [{
-        lang: {
-            type:String,
-            required: true
-        },
-        content: {
-            type:String,
-            index:true,
-            required: true
-        }
-    }],
-    tags: [String],
-    children: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Entity'
-    }],
-    introduction: [{
-        lang: String,
-        content: String
-    }],
+    name: String,
+    tags: {
+        type: [String],
+        index: true
+    },
+    introduction: String,
     resource: [resourceSchema],
     good: {type: Number, default: 0},
     bad: {type: Number, default: 0},
     outdated: {type: Number, default: 0},
     contributors: [{
-        type: String,
+        type: Schema.Types.ObjectId,
         ref: "User"
     }],
     shares: [shareSchema],
@@ -44,10 +30,10 @@ class entity {
         return this.distinct('tags')
     }
     static getAllNames() {
-        return this.distinct('names.content')
+        return this.distinct('name')
     }
     static getBriefEntities () {
-        return this.find({}, { _id: 1, names: 1, tags: 1, introduction: 1})
+        return this.find({}, { _id: 1, name: 1, tags: 1, introduction: 1})
     }
 }
 entitySchema.loadClass(entity)

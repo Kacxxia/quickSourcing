@@ -12,10 +12,13 @@ const AddResource = ({
 }) => {
         return (
             <div>
-                <div className="d-flex align-items-center" style={{marginTop: `1rem`}}>
-                    <div style={{marginRight: `1rem`}}>
+                <div  style={{marginTop: `1rem`}}>
+                    <div>
                         资源
-                    </div>
+                    </div>  
+                </div>
+                {listResourceInput(resource, onResourceChange)}
+                <div className="d-flex align-items-center">
                     <FlatButton 
                         icon={<AddCircleOutline color='green'/>}
                         onTouchTap={() => onAddResource()}
@@ -26,7 +29,6 @@ const AddResource = ({
                         disabled={resource.resourceCount <= 0}
                     />
                 </div>
-                {listResourceInput(resource, onResourceChange)}
             </div>
         );
 };

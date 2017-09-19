@@ -6,6 +6,7 @@ const resourceSchema = new Schema({
     href: {type: String, required: true},
     category: {type: String, required: true},
     lang: String,
+    priority: {type: Number, default: 0},
     translationHref: String,
     introduction: String,
     good: {type: Number, default: 0},

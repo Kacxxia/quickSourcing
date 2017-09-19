@@ -3,16 +3,19 @@ const mongoose = require('mongoose'),
 
 const activitySchema = new Schema({
     user: {
-        type: String,
+        type: Schema.Types.ObjectId,
         ref: "User"
     },
     target: {
         type: Schema.Types.ObjectId,
         ref: "Entity"
     },
+    content: {
+        type: String
+    },
     type: {
         type: String,
-        enum: ["updateEntity", "addChild", "merge", "share", "comment", "createRecResource", "updateResource", "deleteResource", "createCandidateResource"],
+        enum: ["updateEntity", "createEntity", "merge", "share", "comment", "addResource", "updateResource", "removeResource"],
         required: true
     },
     date: {
@@ -20,9 +23,6 @@ const activitySchema = new Schema({
         required: true
     }
 })
-activitySchema.pre("save", (next) => {
-    this.date = new Date
-    next()
-})
+
 
 module.exports = mongoose.model("Activity", activitySchema)

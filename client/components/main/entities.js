@@ -2,15 +2,20 @@ import React, { Component }from 'react';
 import { connect } from 'react-redux'
 import { createSelector } from 'reselect'
 import PropTypes from 'prop-types'
-import { intersection } from 'underscore'
 
 import TagSearchBarMain from '../general/tag-search-bar-main'
 import NameSearchBar from '../general/name-search-bar'
 import Pagination from '../general/pagination'
 import EntityList from '../entities/entity-list'
+import { intersection } from '../../utils'
 
-import { nextPage, prevPage, specificPage, updateTagFilter } from '../../actions/main'
+import { nextPage, prevPage, specificPage, updateTagFilter, updateNameFilter } from '../../actions/main'
+
+import { breadGoEntity } from '../../actions/detail'
 class Entities extends Component {
+    componentDidMount(){
+        this.props.onClearBread()
+    }
     render(){
         const maxDisplay = 8
         let filteredList = [...this.props.filteredEntities]
@@ -20,11 +25,12 @@ class Entities extends Component {
         return (
             <div className='h-100 overflow-adjust px-1' >
                 <div style={{height: `auto`}}><TagSearchBarMain/></div>
-                <div style={{height: `7%`}}><NameSearchBar /></div>
+                <div style={{height: `7%`}}><NameSearchBar nameFilterValue={this.props.nameFilterValue} onUpdateNameFilter={this.props.onUpdateNameFilter}/></div>
                 <div style={{height: `68%`, marginTop: `1rem`}} className='overflow-adjust'>
                     <EntityList 
                         filteredList={displayEntities}
                         initialTags={this.props.inputTags}
+                        maxDisplay={maxDisplay}
                     /></div>
                 <div style={{height: `7%`}}>
                     <Pagination 
@@ -59,14 +65,11 @@ const filteredEntitiesSelector = createSelector(
             acc = intersection(tagId.id, acc)
             return acc
         }, Object.keys(entities))
-        console.log(tagFilteredEntitiesIds)
 
         const tagFilteredEntities = tagFilteredEntitiesIds.map(id => entities[id])
-        console.log(tagFilteredEntities)
         const nameFilteredEntities = tagFilteredEntities.filter(entity => {
-            return entity.names.some(name => name.content.includes(nameFilter))
+            return entity.name.includes(nameFilter)
         })
-        console.log(nameFilteredEntities)
 
         return nameFilteredEntities
     }
@@ -79,7 +82,7 @@ function mapStateToProps(state) {
         searchText: searchTextSelector(state),
         searchResult: searchResultSelector(state),
         isSearching: isSearchingSelector(state),
-        nameFilter: nameFilterSelector(state),
+        nameFilterValue: nameFilterSelector(state),
         inputTags: inputTagsSelector(state)
     }
 }
@@ -89,7 +92,9 @@ function mapDispatchToProps(dispatch) {
         onNextPage: () => dispatch(nextPage()),
         onPrevPage: () => dispatch(prevPage()),
         onSpecPage: (page) => dispatch(specificPage(page)),
-        onUpdateTagId: (tag, id) => dispatch(updateTagFilter(tag, id))
+        onUpdateTagId: (tag, id) => dispatch(updateTagFilter(tag, id)),
+        onUpdateNameFilter: (value) => dispatch(updateNameFilter(value)),
+        onClearBread: () => dispatch(breadGoEntity())
     }
 }
 
@@ -98,13 +103,15 @@ Entities.propTypes = {
     searchText: PropTypes.string.isRequired,
     searchResult: PropTypes.array.isRequired,
     isSearching: PropTypes.bool.isRequired,
-    nameFilter: PropTypes.string.isRequired,
+    nameFilterValue: PropTypes.string.isRequired,
     inputTags: PropTypes.array.isRequired,
     currentPage: PropTypes.number.isRequired,
     onNextPage: PropTypes.func.isRequired,
     onPrevPage: PropTypes.func.isRequired,
     onSpecPage: PropTypes.func.isRequired,
-    onUpdateTagId: PropTypes.func.isRequired
+    onUpdateTagId: PropTypes.func.isRequired,
+    onUpdateNameFilter: PropTypes.func.isRequired,
+    onClearBread: PropTypes.func.isRequired
 }
 
 

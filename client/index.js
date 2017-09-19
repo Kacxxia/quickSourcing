@@ -42,8 +42,8 @@ const searchEnhancer = reduxSearch({
 })
 const history = createHistory()       
 const enhancer = composeWithDevTools(
+    applyMiddleware(ReduxThunk),    
     applyMiddleware(routerMiddleware(history)),
-    applyMiddleware(ReduxThunk),
     searchEnhancer
 )
         

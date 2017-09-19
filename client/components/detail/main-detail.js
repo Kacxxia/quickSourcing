@@ -12,9 +12,11 @@ import { changeShowResource } from '../../actions/detail'
 const MainDetail = ({
     showResource,
     entity,
-    onChangeShowResource
+    onChangeShowResource,
+    match,
+    editStatus
 }) => {
-    const show = showResource ? <DetailResource entity={entity}/> : <DetailIntro entity={entity}/>
+    const show = showResource ? <DetailResource entity={entity} match={match}/> : <DetailIntro entity={entity} match={match} editStatus={editStatus}/>
     return (
         <div style={{position: "relative"}} className='h-100'>
             {show}
@@ -42,7 +44,8 @@ export default connect((state) => {
 MainDetail.propTypes = {
     showResource: PropTypes.bool.isRequired,
     onChangeShowResource: PropTypes.func.isRequired,
-    entity: PropTypes.object.isRequired
+    entity: PropTypes.object.isRequired,
+    editStatus: PropTypes.number.isRequired
 }
 
 function renderIcon(showResource) {

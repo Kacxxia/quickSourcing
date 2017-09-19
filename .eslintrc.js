@@ -21,7 +21,10 @@ module.exports = {
         "__dirname": false,
         alert: false,
         Headers: false,
-        FileReader: false
+        FileReader: false,
+        setTimeout: false,
+        Promise: false,
+        global: false
     }
 
 };

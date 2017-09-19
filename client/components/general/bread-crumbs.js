@@ -4,22 +4,18 @@ import { go, push } from 'react-router-redux'
 import PropTypes from 'prop-types'
 
 import SingleBread from './single-bread'
-import { breadGoEntity, breadGoBack } from '../../actions/detail'
+import { breadGoEntity, breadGoBack, recoverBackStatus } from '../../actions/detail'
 const BreadCrumbs = ({breadsList, onBreadGoBack, onBreadGoEntity}) => {
     return (   
         <div  className='d-flex align-items-center black-text'>
             <SingleBread 
-                entity={null} 
-                onBreadClick={onBreadGoEntity} />
+                name='实体集' 
+                onBreadClick={() => onBreadGoEntity(breadsList.length)} />
             {breadsList.map((bread, i) => {
                 return <SingleBread 
-                    entity={bread} 
+                    name={bread} 
                     key={i} 
-                    onBreadClick={() => {
-                        onBreadGoBack(
-                            findTargetIndex(breadsList, bread), breadsList.length
-                        )
-                    }}
+                    onBreadClick={() => onBreadGoBack(i, breadsList.length)}
                     isLast={i === breadsList.length-1}
                             />
             })}
@@ -37,21 +33,12 @@ export default connect((state) => {
             dispatch(breadGoEntity())
         },
         onBreadGoBack: (index, length) => {
-            dispatch(go(index-length))
-            dispatch(breadGoBack())
+            dispatch(go(-(length-1-index)))
+            dispatch(breadGoBack(index)).then(() => dispatch(recoverBackStatus()))
         }
     }
 })(BreadCrumbs);
 
-function findTargetIndex(origin, target) {
-    let flag
-    origin.forEach((org, index) => {
-        if (org.id === target.id) {
-            flag = index
-        }
-    })
-    return flag
-}
 
 BreadCrumbs.propTypes = {
     breadsList: PropTypes.array.isRequired,

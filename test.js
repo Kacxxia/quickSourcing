@@ -1,5 +1,3 @@
-let a = [1, 2, 3, 4]
+const a = [1, 2]
 
-for(let i in a) {
-    console.log(a[i])
-}
+console.log(a.slice(0, 3))

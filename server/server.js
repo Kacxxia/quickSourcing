@@ -6,6 +6,7 @@ import passport from 'passport'
 import config from './config/main'
 import router from './router'
 import path from 'path'
+import errorHandler from './models/error-handler'
 mongoose.connect(config.database)
 
 const app = express()
@@ -31,3 +32,5 @@ app.use((req, res, next) => {
 })
 
 router(app)
+
+app.use(errorHandler)

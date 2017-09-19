@@ -1,38 +1,37 @@
-import fetch from 'node-fetch'
 import express from 'express'
 import passport from 'passport'
 import Entity from './models/entity'
-import { getDetail, getEntities, getTags, postEntity, postVote} from './controller/entity'
-import { handleRequest } from './controller/main'
+import { 
+    getDetail, 
+    getEntities, 
+    getTags, 
+    getSuperior,
+    getSubordinate,
+    postEntity, 
+    postVote, 
+    postResource,
+    postEdit
+} from './controller/entity'
+import { signUp, signIn, updateToken } from './controller/auth'
+import { getUserProfile, updateUserProfile } from './controller/user'
+
+import passportInit from './config/passport'
 const jwtAuth = passport.authenticate('jwt', { session: false})
 
 module.exports = (app) => {
     const apiRoutes = express.Router()
-    apiRoutes.post('/test', (req, res, next) => {
-        const { entityName, tags } = req.body,
-            entity = new Entity
-        let i, name
-        for ( i in names) {
-            name = {
-                lang: 'cmn',
-                content: names[i].content
-            }
-            entity.names.push(name)
-        }
-        tags.forEach((tag) => {
-            entity.tags.push(tag)
-            console.log(entity.tags)
-        })
-        entity.save((err) => {
-            if (err) { return next(err) }
-            console.log(" success")
-            res.send('ok')
-        })
-    })
-    apiRoutes.get('/test', (req, res, next) => {
-        Entity.getAllTags().
-        then((tags) => {
-            res.send(tags)
+    
+    apiRoutes.get('/test', (req, res) => {
+        Entity
+        .findById('59474a2d6f5c67b8d46e1b1d')
+        .sort({
+            "resource.level": -1,
+            "resoource.good": -1,
+            "resource.bad": 1,
+            "resource.outdated": 1 
+        })  
+        .then(result => {
+            res.send(result)
         })
     })
 
@@ -42,10 +41,24 @@ module.exports = (app) => {
 
     apiRoutes.get('/tags', getTags)
     apiRoutes.post('/entities/:id/vote', postVote)
+    apiRoutes.post('/entities/:id/resource', postResource)
+    apiRoutes.get('/entities/:id/superior', getSuperior)
+    apiRoutes.get('/entities/:id/subordinate', getSubordinate)
+    apiRoutes.post('/entities/:id/editing', postEdit)
     apiRoutes.get('/entities/:id', getDetail)    
     apiRoutes.get('/entities', getEntities)
-    apiRoutes.post('/thunktest', postEntity)
-    // app.get('/entities/:id', handleRequest)
-    // app.get('/', handleRequest)
+    apiRoutes.post('/entities', postEntity)
+
+    apiRoutes.get('/token', jwtAuth, updateToken)
+    apiRoutes.post('/users', signUp)
+    apiRoutes.post('/auth', signIn)
+    apiRoutes.get('/users/:id/profiles', getUserProfile)
+    apiRoutes.post('/users/:id/profiles', updateUserProfile)
+
+    
     app.use('/api', apiRoutes)
+
+    app.get('*', (req, res, next) => {
+        res.sendFile('index.html', {root: __dirname + '/static/'})
+    })
 }

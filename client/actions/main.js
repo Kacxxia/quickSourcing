@@ -9,7 +9,6 @@ import {
     NEXT_PAGE,
     PREV_PAGE,
     UPDATE_NAME_FILTER,
-    BREAD_GO,
     JUMP_PAGE,
     CREATE_ENTITY_ADD_RESOURCE,
     CREATE_ENTITY_CHANGE_RESOURCE,
@@ -22,12 +21,14 @@ import {
     START_POST_ENTITY,
     DELETE_CHIP_CREATE_ENTITY,
     UPDATE_TAG_INPUT_CREATE_ENTITY,
-    UPDATE_TAG_SEARCH_CREATE_ENTITY
+    UPDATE_TAG_SEARCH_CREATE_ENTITY,
+    TOGGLE_DRAWER
 } from './types'
 
 import {
     API_URL,
-    throwError
+    throwError,
+    cookies
 } from './index'
 
 function getTags() {
@@ -89,9 +90,7 @@ export function updateNameFilter(payload) {
     return {type: UPDATE_NAME_FILTER, payload}
 }
 
-export function cardClick(entity) {
-    return ({type: BREAD_GO, payload: entity})
-}
+
 
 export function specificPage(payload) {
     return ({type: JUMP_PAGE, payload})
@@ -198,8 +197,13 @@ export function startPostEntity(){
 
 
 export function postEntity(payload){
-    return (dispatch) => {
+    return (dispatch, getState) => {
         dispatch(startPostEntity())
+        const authenticated =  getState().auth.authenticated
+        const token = authenticated ? cookies.get('token').slice(4) : undefined
+
+        payload.token = token
+        payload.authenticated = authenticated
         const request = {
             method: 'POST',
             headers: {
@@ -207,14 +211,14 @@ export function postEntity(payload){
             },
             body: JSON.stringify(payload)
         }
-        return fetch(`${API_URL}/thunktest`, request)
+        return fetch(`${API_URL}/entities`, request)
             .then((response) => {
                 if (response.ok) {
                     dispatch(postEntitySuccess())
                     dispatch(getTagsAndEntities())
                     setTimeout(() => {
                         dispatch(clearInfo(payload.tags))
-                    }, 2000)
+                    }, 1000)
                 } else {
                     dispatch(throwError('网络错误'))
                 }
@@ -224,4 +228,16 @@ export function postEntity(payload){
             })
 
     }
+}
+
+export function toggleDrawer() {
+    return { type: TOGGLE_DRAWER }
+}
+
+export function goHome() {
+    return push('/')
+}
+
+export function goEntities() {
+    return push('/entities')
 }

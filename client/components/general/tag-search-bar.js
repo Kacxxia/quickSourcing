@@ -36,7 +36,6 @@ const TagSearchBar = ({
                     }}
                     dataSource={dataResource}
                     fullWidth={true}
-                    maxSearchResults={3}
                     style={{display: 'inline-block'}}
                 />
         </div>

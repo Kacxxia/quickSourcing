@@ -16,10 +16,7 @@ const INITIAL_STATE = {
             _id: 13729471,
             id: 13729471,
             tags: ['initial'],
-            names: [{
-                lang: 'zh-cn',
-                content: '`'
-            }]
+            name: ''
         }
     },
     inputTags: [],

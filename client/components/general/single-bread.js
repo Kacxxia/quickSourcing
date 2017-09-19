@@ -5,14 +5,14 @@ import FlatButton from 'material-ui/FlatButton'
 import ChevronRight from 'material-ui/svg-icons/navigation/chevron-right'
 const SingleBread = ({
     onBreadClick,
-    entity,
+    name,
     isLast
 }) => {
     return (
         <div style={{display: 'flex'}} className="align-items-center">
             <FlatButton  
                 onTouchTap={onBreadClick} 
-                label={showContent(entity)}
+                label={name}
                 disabled={isLast}/>
             {renderRight(isLast)}
         </div>
@@ -23,15 +23,8 @@ export default SingleBread;
 
 SingleBread.propTypes = {
     onBreadClick: PropTypes.func.isRequired,
-    entity: PropTypes.object,
+    name: PropTypes.string.isRequired,
     isLast: PropTypes.bool
-}
-
-function showContent(entity) {
-    if (entity) {
-        return entity.names[0].content
-    }
-    return '实体集'
 }
 
 function renderRight(isLast) {

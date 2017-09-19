@@ -1,17 +1,19 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import RaisedButton from 'material-ui/RaisedButton'
+
 import BriefIntroCard from './brief-intro-card'
+import AddEntityPaper from './add-entity-paper'
 import { openCreateModal } from '../../actions/main'
 const EntityList = ({
     filteredList,
     onOpenCreateModal,
-    initialTags
+    initialTags,
+    maxDisplay
 }) => {
-    const list = renderCards(filteredList, onOpenCreateModal, initialTags)
+    const list = renderCards(filteredList, onOpenCreateModal, initialTags,maxDisplay)
     return (
-        <div className='container'>
+        <div className='container h-100 d-flex align-items-center justify-content-center' style={{flexWrap: 'wrap'}}>
             {list}
         </div>
     );
@@ -26,24 +28,24 @@ export default connect(null, (dispatch) => {
 EntityList.propTypes = {
     filteredList: PropTypes.array.isRequired,
     onOpenCreateModal: PropTypes.func.isRequired,
-    initialTags: PropTypes.array.isRequired
+    initialTags: PropTypes.array.isRequired,
+    maxDisplay: PropTypes.number.isRequired
 }
 
-function renderCards (filteredList, onOpenCreateModal, initialTags) {
-    if (filteredList.length === 0 ) {
-        return <RaisedButton 
-                    label="创建" 
-                    primary={true} 
-                    style={{
-                        margin: 12
-                    }} 
-                    onTouchTap={() => {onOpenCreateModal(initialTags)}}
-                />
-    }
+function renderCards (filteredList, onOpenCreateModal, initialTags, maxDisplay) {
     let rows = [],
-        row 
+        row ,
+        length = filteredList.length
+    if(length < maxDisplay){
+        filteredList.push(<AddEntityPaper 
+                    onOpenCreateModal={onOpenCreateModal}
+                    initialTags={initialTags}
+                    key="addEntity"
+                />)
+    }
+    length++
     filteredList.forEach((entity, index) => {
-        if(index % 4 === 0) {
+        if(index % (maxDisplay / 2) === 0) {
             row = {
                 children: []
             }
@@ -51,10 +53,14 @@ function renderCards (filteredList, onOpenCreateModal, initialTags) {
         }
         row.children.push(entity)        
     })
+    if (filteredList)
     return  rows.map((row, i) => {
-        return (<div className='row' key={`row${i}`}>
-                    {row.children.map((entity, i) => {
-                         return <BriefIntroCard entity={entity} key={`entity${i}`} />
+        return (<div className='row w-100' key={`row${i}`}>
+                    {row.children.map((entity, j) => {
+                        if (maxDisplay / 2 * i + j === length-1)
+                            return entity
+                         return <BriefIntroCard entity={entity} key={`entity${j}`} 
+                         />
                     })}
             </div>)
     })

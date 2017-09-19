@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Dialog from 'material-ui/Dialog'
 
@@ -10,7 +11,9 @@ import NotFound from './main/not-found'
 import Navbar from './main/navbar'
 import Footer from './main/footer'
 import ModalContent from './main/create-entity-modal/modal-content'
-import CreateEntityModal from './main/create-entity-modal'
+import ErrorDiv from './main/error-div'
+
+import DashboardBox from './user/dashboard-box'
 import { autoLogIn } from '../actions/auth'
 import { getTagsAndEntities, clearInfo } from '../actions/main'
 
@@ -28,7 +31,7 @@ class App extends Component {
                         <Route path='/' exact component={Home} />
                         <Route path='/entities' exact component={Entities} />
                         <Route path='/entities/:id' component={Detail} />
-                        
+                        <Route path='/profiles/:id' component={DashboardBox} />
                         <Route path='*' component={NotFound} />
                     </Switch>
                 </div>
@@ -46,6 +49,7 @@ class App extends Component {
                 >
                     <ModalContent />
                 </Dialog>
+                <ErrorDiv />
             </div>
         );
     }
@@ -62,3 +66,10 @@ export default connect((state) => {
         onGetTagsAndEntities: () => dispatch(getTagsAndEntities(dispatch))
     }
 })(App);
+
+App.propTypes = {
+    onAutoLogIn: PropTypes.func.isRequired,
+    onGetTagsAndEntities: PropTypes.func.isRequired,
+    isCreateModalOpen: PropTypes.bool.isRequired,
+    onClearInfo: PropTypes.func.isRequired
+}

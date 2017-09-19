@@ -1,12 +1,15 @@
 const mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     bcrypt = require('bcryptjs'),
-    roles = require('../constants')
+    roles = require('../constants'),
+    defaultAvatar = require('../config/main').defaultAvatar
 
 const { ROLE_USER, ROLE_ADMIN, ROLE_SUPER } = roles
 
+mongoose.Promise = global.Promise
+
 const userSchema = new Schema({
-    userName: String,
+    username: String,
     password: String,
     email: {
         type: String,
@@ -14,34 +17,35 @@ const userSchema = new Schema({
         unique: true,
         required: true
     },
-    avatar: String,    
+    avatar: {
+        type: String,
+        default: defaultAvatar
+    },
     role: {
         type: String,
         enum: [ ROLE_ADMIN, ROLE_SUPER, ROLE_USER ],
         default: ROLE_USER
     },
-    introduction: String,
+    introduction: {
+        type: String,
+        default: '请用一句话简单地介绍自己'
+    },
     createTime: Date
 })
-userSchema.pre('save', (next) => {
-    this.createTime = new Date
+userSchema.pre('save', function(next) {
     bcrypt.genSalt(10, (err, salt) => {
         if (err) {
-            return next()
+            return next(err)
         }
         bcrypt.hash(this.password, salt, (err, hash) => {
             this.password = hash
+            next()
         })
     })
 })
 
-userSchema.methods.comparePassword = (password, callback) => {
-    bcrypt.compare(password, this.password, (err, isMatch) => {
-        if (err) {
-            return callback(err)
-        }
-        callback(null, isMatch)
-    })
+userSchema.statics.comparePassword = (reqPassword, password) => {
+    return bcrypt.compare(reqPassword, password)
 }
 
-module.exports = mongoose.model("User", userSchema)
+export default mongoose.model("User", userSchema)

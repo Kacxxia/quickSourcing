@@ -1,11 +1,29 @@
+export const ERROR_MIND = 'error_mind',
+            ERROR_CLOSE = 'error_close'
+
 export const SEARCH_RECEIVE_RESULT = '@@reduxSearch/receiveResult'
 
 export const GET_TAGS_DONE = 'get_tags_done',
-            GET_ENTITIES_DONE = 'get_entities_done'
+            GET_ENTITIES_DONE = 'get_entities_done',
+            TOGGLE_DRAWER = 'toggle_drawer'
 
 export const THROW_ERROR = 'throw_error'
 
-export const AUTH_USER = 'auth_user'
+export const AUTH_USER = 'auth_user',
+            UNAUTH_USER = 'unauth_user',
+            AUTH_SIGN = 'auth_sign',
+            AUTH_SIGN_CANCEL = 'auth_sign_cancel',
+            CHANGE_AUTH_EMAIL = 'change_auth_email',
+            CHANGE_AUTH_PASSWORD = 'change_auth_password',
+            CHANGE_AUTH_CONFIRM_PASSWORD = 'change_auth_confirm_password',
+            CHANGE_TO_SIGN_UP = 'change_to_sign_up',
+            CHANGE_TO_SIGN_IN = 'change_to_sign_in',
+            EMAIL_FOCUS = 'email_focus',
+            EMAIL_BLUR = 'email_blur',
+            PASSWORD_FOCUS = 'password_focus',
+            PASSWORD_BLUR = 'password_blur',
+            CONFIRM_PASSWORD_FOCUS = 'confirm_password_focus',
+            CONFIRM_PASSWORD_BLUR = 'confirm_password_blur'
 
 
 export const CHANGE_SHOW_RESOURCE = 'change_show_resource',
@@ -21,7 +39,44 @@ export const CHANGE_SHOW_RESOURCE = 'change_show_resource',
             RESOURCE_DOWN_VOTE = 'resource_down_vote',
             RESOURCE_OUTDATED_VOTE = 'resource_outdated_vote',
             RESOURCE_UP_VOTE = 'resource_up_vote',
-            POST_VOTE_SUCCESS = 'post_vote_success'
+            POST_VOTE_SUCCESS = 'post_vote_success',
+            DETAIL_ADD_RESOURCE = 'detail_add_resource',
+            DETAIL_ADD_RESOURCE_CHANGE = 'detail_add_resource_change',
+            DETAIL_ADD_RESOURCE_CANCEL = 'detail_add_resource_cancel',
+            DETAIL_ADD_RESOURCE_POST = 'detail_add_resource_post',
+            DETAIL_ADD_RESOURCE_SUCCESS = 'detail_add_resource_success',
+            DETAIL_ADD_RESOURCE_FAILED = 'detail_add_resource_failed',
+            DETAIL_SUPERIOR_CLICK = 'detail_superior_click',
+            DETAIL_SUBORDINATE_CLICK = 'detail_subordinate_click',
+            DETAIL_SUPERIOR_FETCHING = 'detail_superior_fetching',
+            DETAIL_SUBORDINATE_FETCHING = 'detail_subordinate_fetching',
+            DETAIL_SUPERIOR_SUCCESS = 'detail_superior_success',
+            DETAIL_SUBORDINATE_SUCCESS = 'detail_subordinate_success',
+            DETAIL_SUPERIOR_FAILED = 'detail_superior_failed',
+            DETAIL_SUBORDINATE_FAILED = 'detail_subordinate_failed',
+            CLEAR_DETAIL = 'clear_detail',
+            RECOVER_USER_CLICK_BACK_STATUS = 'recover_user_click_back_status',
+            SHOW_MORE_RESOURCE = 'show_more_resource',
+            HIDE_MORE_RESOURCE = 'hide_more_resource',
+            EDIT_ENTITY_NAME = 'edit_entity_name',
+            EDIT_ENTITY_INTRO = 'edit_entity_intro',
+            EDIT_TAG_ADD = 'edit_tag_add',
+            EDIT_TAG_REMOVE = 'edit_tag_remove',
+            EDIT_RESOURCE_NAME = 'edit_resource_name',
+            EDIT_RESOURCE_HREF = 'edit_resource_href',
+            EDIT_RESOURCE_CATEGORY = 'edit_resource_category',
+            EDIT_RESOURCE_PRIORITY = 'edit_resource_priority',
+            EDIT_START = 'edit_start',
+            EDIT_STOP = 'edit_stop',
+            EDIT_CANCEL = 'edit_cancel',
+            EDIT_CANCEL_QUIT = 'edit_cancel_quit',
+            EDIT_TAG_ADD_START = 'edit_tag_add_start',
+            EDIT_TAG_REMOVE_START = 'edit_tag_remove_start',
+            EDIT_TAG_ADD_CANCEL = 'edit_tag_add_cancel',
+            EDIT_TAG_REMOVE_CANCEL = 'edit_tag_remove_cancel',
+            EDIT_TAG_ADD_CHANGE = 'edit_tag_add_change',
+            EDIT_TAG_ADD_FILTER_CHANGE = 'edit_tag_add_filter_change',
+            EDIT_DONE = 'edit_done'
 
 export const DELETE_CHIP = 'delete_chip',
             UPDATE_TAG_ID = 'update_tag_id',
@@ -46,3 +101,19 @@ export const NEXT_PAGE = 'next_page',
             DELETE_CHIP_CREATE_ENTITY = 'delete_chip_create_entity',
             UPDATE_TAG_INPUT_CREATE_ENTITY = 'update_tag_input_create_entity',
             UPDATE_TAG_SEARCH_CREATE_ENTITY = 'update_tag_search_create_entity'
+
+export const OPEN_NAV_AVATAR_MENU = 'open_nav_avatar_menu',
+            CLOSE_NAV_AVATAR_MENU = 'close_nav_avatar_menu'
+
+
+export const GET_PROFILE_DONE = 'get_profile_done',
+            GET_PROFILE_WAITING = 'get_profile_waiting',
+            GET_PROFILE_NOTFOUND = 'get_profile_notfound',
+            EDIT_PROFILE_START = 'edit_profile_start',
+            EDIT_PROFILE_WAITING = 'edit_profile_waiting',
+            EDIT_PROFILE_SUCCESS = 'edit_profile_success',
+            EDIT_PROFILE_POST = 'edit_profile_post',
+            EDIT_PROFILE_CANCEL = 'edit_profile_cancel',
+            EDIT_PROFILE_AVATAR = 'edit_profile_avatar',
+            EDIT_PROFILE_USERNAME = 'edit_profile_username',
+            EDIT_PROFILE_INTRODUCTION = 'edit_profile_introduction'

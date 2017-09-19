@@ -1,10 +1,8 @@
-import React, {Component} from 'react';
-import { Input } from 'react-materialize'
+import React from 'react';
 import TextField from 'material-ui/TextField'
 import SelectField from 'material-ui/SelectField'
 import Divider from 'material-ui/Divider'
 import MenuItem from 'material-ui/MenuItem'
-import { translateCategory } from '../../utils'
 const SingleResourceInput = ({resource, id, onResourceChange}) => {
 
 

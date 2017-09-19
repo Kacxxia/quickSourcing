@@ -1,6 +1,10 @@
+import jwt from 'jsonwebtoken'
+
 import Entity from '../models/entity'
-import Resource from '../models/resource'
-import { detectLanguage } from '../utils'
+import User from '../models/user'
+import Activity from '../models/activity'
+
+import { visitorId } from '../constants'
 export function getTags(req, res){
     Entity.getAllTags()
     .then((tags) => {
@@ -16,21 +20,37 @@ export function getEntities(req, res){
             acc[_id] = Object.assign({}, rec._doc, {id: rec._id}) 
             return acc
         }, {})
-        console.log(result)
         res.send(result)
     })
 }
 
 export function getDetail(req, res, next){
-    console.log('getDetail')
-    Entity.findById(req.params.id)
+    let entityDetail
+    Entity
+    .findById(req.params.id)
+    .sort({
+        "resource.level": -1,
+        "resoource.good": -1,
+        "resource.bad": 1,
+        "resource.outdated": 1 
+    })  
     .then((result) => {
         const resourceList = result.resource
-        let re = Object.assign({}, result._doc, { resource: {}})
+        entityDetail = Object.assign({}, result._doc, { resource: {}})
         resourceList.forEach((r) => {
-            re.resource[r._id] = r
+            entityDetail.resource[r._id] = r
         })
-        res.send(re)
+
+        const opts = {
+            path: 'contributors',
+            select: 'avatar _id'
+        }
+        return User.populate(result, opts)
+    })
+    .then(cons => {
+        entityDetail.contributors = cons.contributors
+
+        res.status(200).json(entityDetail)
     })
     .catch((error) => {
         next(error)
@@ -38,7 +58,8 @@ export function getDetail(req, res, next){
 }
 
 export function postEntity(req, res, next) {
-    const { resource, entityName, tags } = req.body
+    const { resource, entityName, tags, token, authenticated } = req.body
+    const decoded = jwt.decode(token)
     const resourceList = 
         Object
         .keys(resource)
@@ -50,21 +71,28 @@ export function postEntity(req, res, next) {
                 href: resource[key].link
             }
         })
-    console.log(resourceList)
+    const payload = {name: entityName, tags, resource: resourceList}
+    const newEntity = new Entity(payload)
+    console.log(newEntity)
 
-    let nameLang = detectLanguage(entityName)
-    const newEntity = new Entity({
-        names: [{
-            lang: nameLang === 'und' ? 'cmn' : nameLang,
-            content: entityName
-        }],
-        tags,
-        resource: resourceList
+    const newActivity = new Activity({
+        user: authenticated ? decoded._id : visitorId,
+        target: newEntity._id,
+        content: JSON.stringify(payload),
+        type: "createEntity",
+        date: new Date
     })
-
+    if (authenticated) {
+        newEntity.contributors.push(decoded._id)
+    }
     newEntity.save((err) => {
         if (err) return next(err)
-        res.send(201)
+
+        newActivity.save(err => {
+            if (err) return next(err)
+        })
+
+        res.sendStatus(201)
     })
 
 }
@@ -72,10 +100,7 @@ export function postEntity(req, res, next) {
 export function postVote(req, res, next) {
     const {  id } = req.params
     const { upVote, downVote, outdatedVote, resourceId } = req.body
-    console.log(upVote)
-    console.log(downVote)
-    console.log(outdatedVote)
-    console.log(resourceId)
+
     Entity.findOneAndUpdate(
         {_id: id, "resource._id": resourceId},
         { $inc: {
@@ -102,4 +127,179 @@ export function postVote(req, res, next) {
     .catch(err => {
         next(err)
     })
+}
+
+
+export function postResource(req, res, next) {
+    const { id } = req.params,
+        { resource, token, authenticated } = req.body
+    const decoded = jwt.decode(token)
+    let update = {
+        $push: {
+            resource: {
+                name: resource.name,
+                href: resource.href,
+                category: resource.category
+            }
+        }
+    }
+    if (authenticated) {
+        update.$push.contributors = decoded._id
+    }
+    let updateResult
+
+    Entity.findByIdAndUpdate(id, update, {
+        new: true,
+        select: 'resource _id'
+    })
+    .then((result) => {
+        updateResult = result
+
+        return new Activity({
+            user: authenticated ? decoded._id : visitorId,
+            target: result._id,
+            content: JSON.stringify(resource),
+            type: "addResource",
+            date: new Date 
+        })
+    })
+    .then(newActivity => {
+        return newActivity.save(err => {
+            if (err) return next(err)
+            return Promise.resolve(null)
+        })
+    })
+    .then(() => {
+        const reso = updateResult.resource
+        let obj = {}
+        reso.forEach(re => {
+            obj[re._id] = re
+        })
+        res.status(201).json(obj)
+    })
+    .catch(err => {
+        return next(err)
+    })
+}
+
+export function getSuperior(req, res, next) {
+    const { id } = req.params
+    Entity.findById(id, 'tags')
+    .then(tags => {
+        tags = tags.tags
+        return Entity.aggregate([
+            {
+                $match: {
+                    $and: [
+                        {tags: {$size: tags.length-1}},
+                        {$or: makeSuperiorTagFilter(tags)}
+                    ]
+                }
+            },
+            {
+                $group: {
+                    _id: {tags: '$tags'},
+                    excludedTag: {$addToSet: {$setDifference: [tags, '$tags']}},
+                    entities: {$push: {_id: '$_id', name: '$name'}}
+                }
+            },
+            {
+                $project: {
+                    _id: 0
+                }
+            }
+        ])
+    })
+    .then(result => {
+        res.send(result)
+    })  
+    .catch(err => {
+        return next(err)
+    })
+}
+
+function makeSuperiorTagFilter(tags) {
+    return tags.reduce((acc, tag, i) => {
+        acc.push({tags: {$all: tags.slice(0, i).concat(tags.slice(i+1, tags.length))}})
+        return acc
+    }, [])
+}
+
+export function getSubordinate(req, res, next) {
+    const { id } = req.params
+    Entity.findById(id, 'tags')
+    .then(tags => {
+        tags = tags.tags
+        return Entity.aggregate([
+            {
+                $match: {
+                    tags: {$all: tags, $size: tags.length + 1}
+                }
+            },
+            {
+                $group: {
+                    _id: { tags: '$tags'},
+                    excludedTag: {$addToSet: {$setDifference: ['$tags', tags]}},
+                    entities: {$push: {_id: '$_id', name: '$name'}}
+                }
+            },
+            {
+                $project: {
+                    _id: 0
+                }
+            }
+        ]).exec()
+    })
+    .then(results => {
+        res.send(results)
+    })
+    .catch(error => {
+        console.log(error)
+        return next(error)
+    })
+}
+
+
+export function postEdit(req, res, next) {
+    const { id } = req.params
+
+    const { name, tags, resource, introduction, token, authenticated } = req.body
+    const decoded = jwt.decode(token)
+
+    let formatResource  = []
+    for (let i in resource) {
+        formatResource.push(resource[i])
+    }
+    let update = {
+        $set: {
+            name: name,
+            tags: tags,
+            resource: formatResource,
+            introduction: introduction
+        }
+    }
+    if (authenticated) {
+        update.$push = { contributors: decoded._id}
+    }
+    Entity.findByIdAndUpdate(id, update)
+    .then((entity) => {
+            const newActivity = new Activity({
+                user: authenticated ? decoded._id : visitorId,
+                target: entity._id,
+                content: JSON.stringify(update.$set),
+                type: 'updateEntity',
+                date: new Date()
+            })
+            newActivity.save(err => {
+                if (err) {
+                    return next(err)
+                }
+                res.send('ok')
+            })
+        }
+    )
+    .catch((err) => {
+        return next(err)
+    })
+
 }

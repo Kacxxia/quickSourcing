@@ -1,9 +1,9 @@
 import React from 'react';
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+
 import Paper from 'material-ui/Paper'
 import TextField from 'material-ui/TextField'
-import { updateNameFilter } from '../../actions/main'
+
 const NameSearchBar = ({onUpdateNameFilter, nameFilterValue}) => {
     return (
         <div className='d-flex justify-content-center' >
@@ -19,15 +19,7 @@ const NameSearchBar = ({onUpdateNameFilter, nameFilterValue}) => {
     );
 };
 
-export default connect((state) => {
-    return {
-        nameFilterValue: state.searchResource.nameFilter
-    }
-},(dispatch) => {
-    return {
-        onUpdateNameFilter: (value) => dispatch(updateNameFilter(value))
-    }
-})(NameSearchBar);
+export default NameSearchBar;
 
 
 NameSearchBar.propTypes = {

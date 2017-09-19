@@ -13,7 +13,8 @@ import {
     CREATE_ENTITY_REMOVE_RESOURCE,
     DELETE_CHIP_CREATE_ENTITY,
     UPDATE_TAG_INPUT_CREATE_ENTITY,
-    UPDATE_TAG_SEARCH_CREATE_ENTITY
+    UPDATE_TAG_SEARCH_CREATE_ENTITY,
+    TOGGLE_DRAWER
 } from '../actions/types'
 
 const INITIAL_STATE = {
@@ -25,11 +26,15 @@ const INITIAL_STATE = {
     inputTags: [],
     tagSearchText: '',
     entityName: '',
-    postStatus: 1
+    postStatus: 1,
+    drawerStatus: false
 }
 
 export default function (state = INITIAL_STATE, action) {
     switch (action.type) {
+        case TOGGLE_DRAWER:
+            return Object.assign({}, state, 
+                { drawerStatus: !state.drawerStatus})
         case NEXT_PAGE:
             return Object.assign({}, state, { currentPage: state.currentPage+1 })
         case PREV_PAGE:
