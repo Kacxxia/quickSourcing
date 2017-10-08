@@ -1,6 +1,11 @@
-const obj = {
-    a: 1,
-    b: 2
-}
-delete obj.a
-console.log(obj)
+import React from 'react';
+
+const Test = () => {
+    return (
+        <div>
+            asdasd
+        </div>
+    );
+};
+
+export default Test;

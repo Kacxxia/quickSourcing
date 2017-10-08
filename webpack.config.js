@@ -21,24 +21,21 @@ const config = {
                 test: /jsx?$/,
                 loader: 'babel-loader',
                 options: {
-                    presets: ['es2015', 'react', 'stage-0']
+                    presets: ['env', 'react', 'stage-0']
                 } 
             }
         ]
     },
-    // externals: {
-    //     "react": 'React',
-    //     "react-dom": 'ReactDOM',
-    //     "react-router": 'ReactRouter',
-    //     "react-router-dom": 'ReactRouterDOM',
-    //     "react-router-redux": 'ReactRouterRedux',
-    //     "redux": 'Redux',
-    //     "react-redux": 'ReactRedux',
-    //     "redux-thunk": 'ReduxThunk',
-    //     "reselect": 'Reselect',
-    //     "history": 'History',
-    //     "babel-polyfill": '_babelPolyfill'
-    // },
+    externals: {
+        "react": 'React',
+        "react-dom": 'ReactDOM',
+        "redux": 'Redux',
+        "react-redux": 'ReactRedux',
+        "redux-thunk": 'ReduxThunk',
+        "reselect": 'Reselect',
+        "history": 'History',
+        "babel-polyfill": '_babelPolyfill'
+    },
     devServer: {
         historyApiFallback: true,
         publicPath: '/',
