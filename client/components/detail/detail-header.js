@@ -20,11 +20,11 @@ const DetailHeader = ({editStatus, onCancelClick, onSubmitClick, onEditClick, on
     const editCancelChooseActions = [
         <RaisedButton 
             label='取消'
-            onTouchTap={onEditCancelQuit}
+            onClick={onEditCancelQuit}
         />,
         <RaisedButton
             label='退出'
-            onTouchTap={onEditCancelConfirm}
+            onClick={onEditCancelConfirm}
             primary={true}
             style={{marginLeft: '1rem'}}
         />

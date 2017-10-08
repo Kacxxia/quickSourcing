@@ -42,7 +42,7 @@ const ResourceDetail = ({
             <div className='d-flex'>
                 <div> 
                     <IconButton
-                        onTouchTap={() => onUpVote(detail._id, voteStatus.upVoted, voteStatus.downVoted, entityId)}
+                        onClick={() => onUpVote(detail._id, voteStatus.upVoted, voteStatus.downVoted, entityId)}
                         title="赞"
                     >
                         <ThumbUp color={isActive(voteStatus.upVoted)}/>
@@ -51,7 +51,7 @@ const ResourceDetail = ({
                 </div>
                 <div>
                     <IconButton
-                        onTouchTap={() => onDownVote(detail._id, voteStatus.downVoted,voteStatus.upVoted, entityId)}
+                        onClick={() => onDownVote(detail._id, voteStatus.downVoted,voteStatus.upVoted, entityId)}
                         title="踩"
                     >
                         <ThumbDown color={isActive(voteStatus.downVoted)}/>
@@ -60,7 +60,7 @@ const ResourceDetail = ({
                 </div>
                 <div>
                     <IconButton
-                        onTouchTap={() => onOutdatedVote(detail._id, voteStatus.outdatedVoted, entityId)}
+                        onClick={() => onOutdatedVote(detail._id, voteStatus.outdatedVoted, entityId)}
                         title="过时"
                     >
                         <Update color={isActive(voteStatus.outdatedVoted)}/>

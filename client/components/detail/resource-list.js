@@ -25,7 +25,7 @@ const ResourceList = ({
                     style={{backgroundColor: color, color: '#FFFFFF', cursor: 'pointer', height}}
                     className='h-100 d-flex align-items-center justify-content-center resource-list-plate'
                     zDepth={2}
-                    onTouchTap={() => onShowMoreResource(category)}
+                    onClick={() => onShowMoreResource(category)}
                 >
                     {translateCategory(category)}
                 </Paper>
@@ -37,7 +37,7 @@ const ResourceList = ({
                 actions={
                     <FlatButton 
                         label='关闭'
-                        onTouchTap={onHideMoreResource}
+                        onClick={onHideMoreResource}
                         />  
                 }
                 contentStyle={{maxWidth: '80%'}}

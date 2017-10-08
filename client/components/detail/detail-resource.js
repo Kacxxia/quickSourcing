@@ -26,13 +26,13 @@ const DetailResource = ({
     const addResourceActions = [
         <RaisedButton 
             label='取消'
-            onTouchTap={onAddResourceCancel}
+            onClick={onAddResourceCancel}
             style={{marginRight: '1rem'}}
         />,
         <RaisedButton
             primary={true}
             label='提交'
-            onTouchTap={() => onAddResourcePost(match.params.id)}
+            onClick={() => onAddResourcePost(match.params.id)}
         />
     ]
 
@@ -63,7 +63,7 @@ const DetailResource = ({
                 actions={
                     isDetailOpen ? <FlatButton 
                             label='关闭'
-                            onTouchTap={onHideDetailResource}
+                            onClick={onHideDetailResource}
                         /> : addResourceActions }
             > 
             {isDetailOpen ? <ResourceDetail /> : <ResourceAdd />}
@@ -79,7 +79,9 @@ export default connect(state => {
     }
 }, dispatch => {
     return {
-        onHideDetailResource: () => dispatch(hideDetailResource()),
+        onHideDetailResource: () => {
+            dispatch(hideDetailResource())
+        },
         onAddResourceCancel: () => dispatch(addResourceCancel()),
         onAddResourcePost: (id) => dispatch(addResourcePost(id))
     }

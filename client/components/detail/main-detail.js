@@ -22,7 +22,7 @@ const MainDetail = ({
             {show}
             <FloatingActionButton 
                 secondary={!showResource}
-                onTouchTap={onChangeShowResource}
+                onClick={onChangeShowResource}
                 style={{position: 'absolute', bottom: `1rem`, right: `1rem`}}
             >
                 {renderIcon(showResource)}

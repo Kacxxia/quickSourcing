@@ -145,7 +145,7 @@ function renderTags(editStatus, tags, onEditTagAddStart, onEditTagRemoveStart) {
     if (editStatus) {
         arr.push(<FloatingActionButton 
                         mini={true}
-                        onTouchTap={onEditTagAddStart}
+                        onClick={onEditTagAddStart}
                         key='addTag'    
                 >
                     <ContentAdd />
@@ -163,11 +163,11 @@ function renderEditTagDialog(editStatus, onEditTagRemove, onEditTagRemoveCancel,
                     actions={[
                         <RaisedButton 
                             label='取消'
-                            onTouchTap={onEditTagRemoveCancel}
+                            onClick={onEditTagRemoveCancel}
                         />,
                         <RaisedButton
                             label='确定'
-                            onTouchTap={() => {
+                            onClick={() => {
                                 onEditTagRemove(tagRemovingIndex)
                                 onEditTagRemoveCancel()
                             }}
@@ -190,11 +190,11 @@ function renderEditTagDialog(editStatus, onEditTagRemove, onEditTagRemoveCancel,
                     actions={[
                         <RaisedButton 
                             label='取消'
-                            onTouchTap={onEditTagAddCancel}
+                            onClick={onEditTagAddCancel}
                         />,
                         <RaisedButton
                             label='确定'
-                            onTouchTap={() => {
+                            onClick={() => {
                                 onEditTagAdd(tagAddingNames)
                                 onEditTagAddCancel()
                                 }

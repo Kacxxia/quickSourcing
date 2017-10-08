@@ -79,13 +79,13 @@ const SignInComponent = ({
             <RaisedButton
                 label='注册'
                 labelColor='#FFFFFF'
-                onTouchTap={onSignUp}
+                onClick={onSignUp}
                 backgroundColor='#2eb82e'
                 disabled={typeof(chooseAccountErrorText(emailFocusStatus, email)) !== 'boolean'||typeof(choosePasswordErrorText(passwordFocusStatus, password)) !== 'boolean'||typeof(chooseConfirmPasswordErrorText(confirmPasswordFocusStatus, confirmPassword, password)) !== 'boolean'|| !email || !password || !confirmPassword}
             />
             <RaisedButton
                 label='去登录'
-                onTouchTap={onChangeToSignIn}
+                onClick={onChangeToSignIn}
                 style={{marginLeft: '1rem'}}
             />
         </div>

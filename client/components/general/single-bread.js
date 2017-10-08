@@ -11,7 +11,7 @@ const SingleBread = ({
     return (
         <div style={{display: 'flex'}} className="align-items-center">
             <FlatButton  
-                onTouchTap={onBreadClick} 
+                onClick={onBreadClick} 
                 label={name}
                 disabled={isLast}/>
             {renderRight(isLast)}

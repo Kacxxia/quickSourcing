@@ -122,7 +122,7 @@ function renderAppBar(authenticated, onAuthSign, email, avatar, onOpenMenu, onTo
         iconElementRight: <FlatButton
                                 label='登录'
                                 labelStyle={{color: '#FFFFFF'}}
-                                onTouchTap={onAuthSign}
+                                onClick={onAuthSign}
                           />,
         className: 'align-items-center ',
         style: {

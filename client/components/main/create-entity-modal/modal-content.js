@@ -38,12 +38,12 @@ const ModalContent =({
                 <RaisedButton 
                     label='取消' 
                     style={buttonStyle} 
-                    onTouchTap={() => onClearInfo(tags)}
+                    onClick={() => onClearInfo(tags)}
                 />
                 <RaisedButton 
                     label='创建' 
                     style={buttonStyle} 
-                    onTouchTap={() => 
+                    onClick={() => 
                         onPostEntity({entityName, tags, resource})
                     } 
                     disabled={!checkForm(entityName, tags, resource)}
