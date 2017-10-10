@@ -2,7 +2,8 @@ const mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     bcrypt = require('bcryptjs'),
     roles = require('../constants'),
-    defaultAvatar = require('../config/main').defaultAvatar
+    defaultAvatar = require('../config/main').defaultAvatar,
+    userVoteSchema = require('./user-vote')
 
 const { ROLE_USER, ROLE_ADMIN, ROLE_SUPER } = roles
 
@@ -30,7 +31,9 @@ const userSchema = new Schema({
         type: String,
         default: '请用一句话简单地介绍自己'
     },
-    createTime: Date
+    createTime: Date,
+    votes: [userVoteSchema],
+    captcha: String
 })
 userSchema.pre('save', function(next) {
     bcrypt.genSalt(10, (err, salt) => {

@@ -25,7 +25,7 @@ const MoreResource = ({list, onShowDetailResource, onAddResource}) => {
             <div className='d-flex align-items-center' style={{padding: '1.5rem 0'}}>
                 <h3 style={{margin: 0}}>候选资源</h3>
                 <FloatingActionButton 
-                    onClick={() => onAddResource()} 
+                    onTouchTap={() => onAddResource()} 
                     mini={true}
                     zDepth={1}
                     style={{marginLeft: '1rem'}}

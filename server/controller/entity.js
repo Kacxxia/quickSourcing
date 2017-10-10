@@ -73,7 +73,6 @@ export function postEntity(req, res, next) {
         })
     const payload = {name: entityName, tags, resource: resourceList}
     const newEntity = new Entity(payload)
-    console.log(newEntity)
 
     const newActivity = new Activity({
         user: authenticated ? decoded._id : visitorId,
@@ -98,9 +97,10 @@ export function postEntity(req, res, next) {
 }
 
 export function postVote(req, res, next) {
+    const { _id: userId } = req.user
     const {  id } = req.params
     const { upVote, downVote, outdatedVote, resourceId } = req.body
-
+    let voteTotal
     Entity.findOneAndUpdate(
         {_id: id, "resource._id": resourceId},
         { $inc: {
@@ -115,20 +115,59 @@ export function postVote(req, res, next) {
         const target = resourceList.filter(re => 
             re._id.toString() === resourceId
         )[0]
-        const result = {
+        voteTotal = {
             good: target.good,
             bad: target.bad,
             outdated: target.outdated,
             resourceId
         }
-        res.status(200).json(result)
-
+        return User.findOne({ _id: userId })
+    }) 
+    .then(result => {
+        let i = 0
+        for (; i < result.votes.length; i++) {
+            if (result.votes[i]._id.toString() === resourceId) break;
+        }
+        if (i === result.votes.length) {
+            const newVote = {
+                _id: resourceId,
+                upVoted: false,
+                downVoted: false,
+                outdatedVoted: false
+            }
+            result.votes.push(newVote)
+            return result.save()
+        }
+        else {
+            console.log(i)
+            console.log(result.votes[i])
+            const originVotes = Object.assign({}, result.votes[i]._doc)
+            console.log('---------------')
+            console.log(originVotes)
+            const update = {
+                _id: resourceId,
+                upVoted: chooseVote(upVote, originVotes.upVoted),
+                downVoted: chooseVote(downVote, originVotes.downVoted),
+                outdatedVoted: chooseVote(outdatedVote, originVotes.outdatedVoted)
+            }
+            console.log(update)
+            result.votes[i] = update
+            return result.save()
+        }
+    } )
+    .then(() => {
+        res.status(200).json(voteTotal)        
     })
     .catch(err => {
         next(err)
     })
 }
 
+function chooseVote(status, origin) {
+    if (status > 0 ) return true
+    if (status < 0 ) return false
+    if (status === 0) return origin
+}
 
 export function postResource(req, res, next) {
     const { id } = req.params,
@@ -141,10 +180,13 @@ export function postResource(req, res, next) {
                 href: resource.href,
                 category: resource.category
             }
-        }
+        },
+        $addToSet: {}
     }
     if (authenticated) {
-        update.$push.contributors = decoded._id
+        update.$addToSet.contributors = decoded._id
+    } else {
+        delete update.$addToSet
     }
     let updateResult
 
@@ -254,7 +296,6 @@ export function getSubordinate(req, res, next) {
         res.send(results)
     })
     .catch(error => {
-        console.log(error)
         return next(error)
     })
 }
@@ -276,10 +317,11 @@ export function postEdit(req, res, next) {
             tags: tags,
             resource: formatResource,
             introduction: introduction
-        }
+        },
+        $addToSet: {}
     }
     if (authenticated) {
-        update.$push = { contributors: decoded._id}
+        update.$addToSet.contributors = decoded._id
     }
     Entity.findByIdAndUpdate(id, update)
     .then((entity) => {

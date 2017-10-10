@@ -21,11 +21,11 @@ const AddResource = ({
                 <div className="d-flex align-items-center">
                     <FlatButton 
                         icon={<AddCircleOutline color='green'/>}
-                        onClick={() => onAddResource()}
+                        onTouchTap={() => onAddResource()}
                     />
                     <FlatButton 
                         icon={<RemoveCircleOutline color='red'/>}
-                        onClick={() => onRemoveResource()}
+                        onTouchTap={() => onRemoveResource()}
                         disabled={resource.resourceCount <= 0}
                     />
                 </div>

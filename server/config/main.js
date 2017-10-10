@@ -8,5 +8,6 @@ module.exports = {
         api_key: '226462234434539',
         api_secret: 'oEQzZAVOfUNg2wgM2l48qNmGj08',
         tags: ['quickSourcing']
-    }
+    },
+    mailAddress: 'kacxxia@gmail.com'
 }

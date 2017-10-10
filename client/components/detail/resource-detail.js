@@ -35,14 +35,14 @@ const ResourceDetail = ({
         <div>
             {renderResourceName(editStatus, detail._id, detail.name, onEditResourceName)}
             <div>链接:</div>
-            <div>{renderResourceHref(editStatus, detail._id, detail.href, onEditResourceHref)}</div>
+            <div style={{wordWrap: 'break-word'}}>{renderResourceHref(editStatus, detail._id, detail.href, onEditResourceHref)}</div>
             {renderResourceCategory(editStatus, detail._id, detail.category, onEditResourceCategory)}
             {renderResourcePriority(editStatus, detail._id, detail.priority,
             onEditResourcePriority)}
             <div className='d-flex'>
                 <div> 
                     <IconButton
-                        onClick={() => onUpVote(detail._id, voteStatus.upVoted, voteStatus.downVoted, entityId)}
+                        onClick={(event) => onUpVote(detail._id, voteStatus.upVoted, voteStatus.downVoted, entityId, event.target)}
                         title="赞"
                     >
                         <ThumbUp color={isActive(voteStatus.upVoted)}/>
@@ -51,7 +51,7 @@ const ResourceDetail = ({
                 </div>
                 <div>
                     <IconButton
-                        onClick={() => onDownVote(detail._id, voteStatus.downVoted,voteStatus.upVoted, entityId)}
+                        onClick={(event) => onDownVote(detail._id, voteStatus.downVoted,voteStatus.upVoted, entityId, event.target)}
                         title="踩"
                     >
                         <ThumbDown color={isActive(voteStatus.downVoted)}/>
@@ -60,7 +60,7 @@ const ResourceDetail = ({
                 </div>
                 <div>
                     <IconButton
-                        onClick={() => onOutdatedVote(detail._id, voteStatus.outdatedVoted, entityId)}
+                        onClick={(event) => onOutdatedVote(detail._id, voteStatus.outdatedVoted, entityId, event.target)}
                         title="过时"
                     >
                         <Update color={isActive(voteStatus.outdatedVoted)}/>
@@ -94,9 +94,9 @@ export default connect(state => {
     }
 }, dispatch => {
     return {
-        onOutdatedVote: (id, status, entityId) => dispatch(outdatedVote(id, status, entityId)),
-        onUpVote: (id, upSta, downSta, entityId) => dispatch(upVote(id, upSta, downSta, entityId)),
-        onDownVote: (id, downSta, upSta, entityId) => dispatch(downVote(id, downSta, upSta, entityId)),
+        onOutdatedVote: (id, status, entityId, target) => dispatch(outdatedVote(id, status, entityId, target)),
+        onUpVote: (id, upSta, downSta, entityId, target) => dispatch(upVote(id, upSta, downSta, entityId, target)),
+        onDownVote: (id, downSta, upSta, entityId, target) => dispatch(downVote(id, downSta, upSta, entityId, target)),
         onEditResourceName: (id, text) => dispatch(editResourceName(id, text)),
         onEditResourceHref: (id, text) => dispatch(editResourceHref(id, text)),
         onEditResourceCategory: (id, text) => dispatch(editResourceCategory(id, text)),

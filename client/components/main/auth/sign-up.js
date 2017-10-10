@@ -3,11 +3,13 @@ import PropTypes from 'prop-types'
 
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
+
 import { 
     chooseAccountErrorText, 
     chooseConfirmPasswordErrorText, 
     choosePasswordErrorText} 
-from './index'
+from '../../../utils'
 const SignInComponent = ({
     email,
     password,
@@ -23,6 +25,7 @@ const SignInComponent = ({
     onPasswordBlur,
     onConfirmPasswordBlur,
     onConfirmPasswordFocus,
+    onOpenResetPassword,
     emailFocusStatus,
     passwordFocusStatus,
     confirmPasswordFocusStatus
@@ -76,18 +79,25 @@ const SignInComponent = ({
                     }}
                 />
             </div>
-            <RaisedButton
-                label='注册'
-                labelColor='#FFFFFF'
-                onClick={onSignUp}
-                backgroundColor='#2eb82e'
-                disabled={typeof(chooseAccountErrorText(emailFocusStatus, email)) !== 'boolean'||typeof(choosePasswordErrorText(passwordFocusStatus, password)) !== 'boolean'||typeof(chooseConfirmPasswordErrorText(confirmPasswordFocusStatus, confirmPassword, password)) !== 'boolean'|| !email || !password || !confirmPassword}
-            />
-            <RaisedButton
-                label='去登录'
-                onClick={onChangeToSignIn}
-                style={{marginLeft: '1rem'}}
-            />
+            <div className='d-flex' style={{flexWrap: 'wrap'}}>
+                <RaisedButton
+                    label='注册'
+                    labelColor='#FFFFFF'
+                    onTouchTap={onSignUp}
+                    backgroundColor='#2eb82e'
+                    disabled={typeof(chooseAccountErrorText(emailFocusStatus, email)) !== 'boolean'||typeof(choosePasswordErrorText(passwordFocusStatus, password)) !== 'boolean'||typeof(chooseConfirmPasswordErrorText(confirmPasswordFocusStatus, confirmPassword, password)) !== 'boolean'|| !email || !password || !confirmPassword}
+                />
+                <RaisedButton
+                    label='去登录'
+                    onTouchTap={onChangeToSignIn}
+                    style={{marginLeft: '1rem'}}
+                />
+                <FlatButton
+                    label='忘记密码？'
+                    onClick={onOpenResetPassword}
+                    style={{marginLeft: 'auto'}}
+                />
+            </div>
         </div>
     );
 };
@@ -109,6 +119,7 @@ SignInComponent.propTypes = {
     onPasswordBlur: PropTypes.func.isRequired,
     onConfirmPasswordBlur: PropTypes.func.isRequired,
     onConfirmPasswordFocus: PropTypes.func.isRequired,
+    onOpenResetPassword: PropTypes.func.isRequired,
     emailFocusStatus: PropTypes.number.isRequired,
     passwordFocusStatus: PropTypes.number.isRequired,
     confirmPasswordFocusStatus: PropTypes.number.isRequired

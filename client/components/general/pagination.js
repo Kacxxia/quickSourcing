@@ -24,19 +24,19 @@ const Pagination = ({
         <div className="d-flex justify-content-center" >
             <FlatButton 
                 icon={<ChevronLeft /> }
-                onClick={() => onPrevPage()}
+                onTouchTap={() => onPrevPage()}
                 disabled={leftDisabled}
             />
             {pages.map((page) => {
                 return <FlatButton 
-                    onClick={() => onSpecPage(page)} 
+                    onTouchTap={() => onSpecPage(page)} 
                     label={page}
                     primary={page === currentPage} 
                     key={page}/>
             })}
             <FlatButton 
                 icon={<ChevronRight /> }
-                onClick={() => onNextPage()}
+                onTouchTap={() => onNextPage()}
                 disabled={rightDisabled}
             />
         </div>

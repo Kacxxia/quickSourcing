@@ -38,7 +38,7 @@ function renderItems(items, onEnterLevel, isSuperior){
                                         key={`item${i}`}
                                         title={entity.name}
                                         style={{overflowX: 'hidden'}}
-                                        onClick={() => onEnterLevel(entity.name, entity._id)}
+                                        onTouchTap={() => onEnterLevel(entity.name, entity._id)}
                                         primaryText={entity.name}
                                     />
                         })}

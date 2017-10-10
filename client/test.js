@@ -1,11 +1,6 @@
-import React from 'react';
+let i = ''
+for (let t=0; t<128;t++) {
+    i += 1
+}
 
-const Test = () => {
-    return (
-        <div>
-            asdasd
-        </div>
-    );
-};
-
-export default Test;
+console.log(i)

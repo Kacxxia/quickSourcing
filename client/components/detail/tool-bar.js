@@ -9,7 +9,7 @@ const ToolBar = ({editStatus, onEditClick, onCancelClick, onSubmitClick}) => {
                 <RaisedButton 
                     label='编辑'
                     primary={true}
-                    onClick={onEditClick}
+                    onTouchTap={onEditClick}
                 />
             </div>
             
@@ -20,12 +20,12 @@ const ToolBar = ({editStatus, onEditClick, onCancelClick, onSubmitClick}) => {
                 <RaisedButton 
                     icon={<Block color='red' />}
                     label='取消'
-                    onClick={onCancelClick}
+                    onTouchTap={onCancelClick}
                 />
                 <RaisedButton 
                     icon={<Done color='green' />}
                     label='完成'
-                    onClick={onSubmitClick}
+                    onTouchTap={onSubmitClick}
                 />
             </div>
             

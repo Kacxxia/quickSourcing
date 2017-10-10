@@ -13,14 +13,36 @@ import {
     EMAIL_BLUR,
     CONFIRM_PASSWORD_BLUR,
     PASSWORD_BLUR,
-    UNAUTH_USER
+    UNAUTH_USER,
+    NEED_AUTH_POPOVER_CLOSE,
+    NEED_AUTH_POPOVER_OPEN,
+    RESET_PASSWORD_CLOSE,
+    RESET_PASSWORD_OPEN,
+    RESET_PASSWORD_CHANGE_CONFIRM_PASSWORD,
+    RESET_PASSWORD_CHANGE_EMAIL,
+    RESET_PASSWORD_CHANGE_PASSWORD,
+    RESET_PASSWORD_DONE,
+    RESET_PASSWORD_EDIT_TARGET_EMAIL,
+    RESET_PASSWORD_SEND_EMAIL,
+    RESET_PASSWORD_GO_RESET_PASSWORD,
+    RESET_PASSWORD_PASSWORD_BLUR,
+    RESET_PASSWORD_PASSWORD_FOCUS,
+    RESET_PASSWORD_CONFIRM_PASSWORD_BLUR,
+    RESET_PASSWORD_CONFIRM_PASSWORD_FOCUS,
+    RESET_PASSWORD_EMAIL_BLUR,
+    RESET_PASSWORD_EMAIL_FOCUS,
+    RESET_PASSWORD_RESEND_EMAIL,
+    RESET_PASSWORD_CAPTCHA_DECREASE,
+    RESET_PASSWORD_CHANGE_CAPTCHA,
 } from './types'
 
-import { API_URL, cookies} from './index'
+import { API_URL, cookies } from './index'
+import { getUserVoteInfo } from './detail'
 
 import jwtDecode from 'jwt-decode'
 
 import { mindError } from './error'
+
 export function autoLogIn() {
     return dispatch => {
         let token = cookies.get('token')
@@ -115,6 +137,7 @@ export function signIn() {
                     const user = { email, avatar, _id}
                     dispatch({type: AUTH_USER, user: user})
                     dispatch({ type: AUTH_SIGN_CANCEL })
+                    dispatch(getUserVoteInfo())
                 })
             } else {
                 response.text().then(err => {
@@ -186,9 +209,146 @@ export function confirmPasswordFocus() {
 export function confirmPasswordBlur() {
     return { type: CONFIRM_PASSWORD_BLUR }
 }
+export function resetPasswordPasswordBlur() {
+    return { type: RESET_PASSWORD_PASSWORD_BLUR }
+}
+export function resetPasswordPasswordFocus() {
+    return { type: RESET_PASSWORD_PASSWORD_FOCUS }
+}
+export function resetPasswordConfirmPasswordBlur() {
+    return { type: RESET_PASSWORD_CONFIRM_PASSWORD_BLUR }
+}
+export function resetPasswordConfirmPasswordFocus() {
+    return { type: RESET_PASSWORD_CONFIRM_PASSWORD_FOCUS }
+}
 
 export function signOut() {
     cookies.remove('token', { path: '/' })
     return { type: UNAUTH_USER }
 }
 
+export function needAuthPopoverOpen(target, header) {
+    return { type: NEED_AUTH_POPOVER_OPEN, target, header }
+}
+
+export function needAuthPopoverClose() {
+    return { type: NEED_AUTH_POPOVER_CLOSE }
+}
+
+export function closeResetPassword() {
+    return { type: RESET_PASSWORD_CLOSE }
+}
+
+export function openResetPassword() {
+    return { type: RESET_PASSWORD_OPEN }
+}
+
+export function resetPasswordChangeEmail(value) {
+    return { type: RESET_PASSWORD_CHANGE_EMAIL, value}
+}
+
+export function resetPasswordSendEmail() {
+    return (dispatch, getState) => {
+        const email = getState().auth.resetPassword.email
+        const request = {
+            method: 'GET',
+            headers: {'Content-Type': 'text/plain'}
+        }
+        fetch(`${API_URL}/users/${email}/captcha`, request)
+        .then(response => {
+            if (response.ok) {
+                dispatch({ type: RESET_PASSWORD_SEND_EMAIL })
+            } else {
+                response.text().then(err => mindError(err))
+            }
+        })
+        .catch(err => {
+            mindError(err)
+        })
+
+    }
+}
+export function resetPasswordChangePassword(value) {
+    return { type: RESET_PASSWORD_CHANGE_PASSWORD, value}
+}
+
+export function resetPasswordChangeConfirmPassword(value) {
+    return { type: RESET_PASSWORD_CHANGE_CONFIRM_PASSWORD, value}
+}
+
+export function resetPasswordCaptchaDecrease() {
+    return { type: RESET_PASSWORD_CAPTCHA_DECREASE }
+}
+export function resetPasswordResendEmail() {
+    return dispatch => {
+        dispatch({type: RESET_PASSWORD_RESEND_EMAIL})
+        const i = setInterval(() => dispatch(resetPasswordCaptchaDecrease()), 1000)
+        setTimeout(() => clearInterval(i), 60000)
+        dispatch(resetPasswordSendEmail())
+    }
+}
+
+export function resetPasswordEditTargetEmail() {
+    return { type: RESET_PASSWORD_EDIT_TARGET_EMAIL }
+}
+
+export function resetPasswordChangeCaptcha(value) {
+    return { type: RESET_PASSWORD_CHANGE_CAPTCHA, value}
+}
+
+export function tryResetPassword() {
+    return (dispatch, getState) => {
+        const { captcha, email } = getState().auth.resetPassword
+        const req = {
+            method: 'POST',
+            headers: {'Content-Type': 'text/plain'},
+            body: captcha
+        }
+        fetch(`${API_URL}/users/${email}/captcha`, req)
+        .then(response => {
+            if (response.ok) {
+                dispatch({ type: RESET_PASSWORD_GO_RESET_PASSWORD })
+            }
+            else {
+                if (response.status === 401) {
+                    mindError('验证码错误或过期')
+                } else {
+                    response.text().then(err => mindError(err))
+                }
+            }
+        })
+        .catch(err => {
+            mindError(err)
+        })
+    }
+}
+export function doResetPassword() {
+    return (dispatch, getState) => {
+        const { email, password } = getState().auth.resetPassword
+        const req = {
+            method: 'POST',
+            headers: {'Content-Type': 'text/plain'},
+            body: password
+        }
+        fetch(`${API_URL}/users/${email}/password`, req)
+        .then(response => {
+            if (response.ok) {
+                dispatch({ type: RESET_PASSWORD_DONE })
+            }
+            else {
+                    response.text().then(err => mindError(err))
+            }
+        })
+        .catch(err => {
+            mindError(err)
+        })
+    }
+}
+
+export function resetPasswordEmailFocus() {
+    return { type: RESET_PASSWORD_EMAIL_FOCUS }
+}
+
+export function resetPasswordEmailBlur() {
+    return { type: RESET_PASSWORD_EMAIL_BLUR }
+}

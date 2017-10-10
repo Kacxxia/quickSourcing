@@ -1,5 +1,6 @@
 import User from '../models/user'
-import { generateToken, filterUserInfo } from '../utils'
+import { generateToken, filterUserInfo, mailTransporter, generateFiexedLengthDigitsString, generateHtmlMail } from '../utils'
+import { mailAddress } from '../config/main'
 export function signUp(req, res, next) {
     const { email, password } = req.body
     User.findOne({ email: email}).exec()
@@ -27,7 +28,6 @@ export function signUp(req, res, next) {
             })
     }) 
     .then(product => {
-        console.log(product)
         res.status(201).json({
             token: `JWT ${generateToken(filterUserInfo(product))}`
         })
@@ -59,7 +59,6 @@ export function signIn(req, res, next) {
         }
     })
     .then(() => {
-        console.log(filterUserInfo(product))
         res.status(201).json({
             token: `JWT ${generateToken(filterUserInfo(product))}`
         })
@@ -82,11 +81,66 @@ export function updateToken(req, res) {
     })
 }
 
-export function autoSignInAuth(req, res, next) {
-    const { _id } = req.user 
-    User.findById(_id, '_id avatar email')
-    .then(result => {
-        res.status(200).json(result)
+export function sendResetPasswordCaptcha(req, res, next) {
+    const { email } = req.params
+    const captcha = generateFiexedLengthDigitsString(6)
+
+    setTimeout(() => {
+        User.findOneAndUpdate({email: email}, {$unset: {captcha: ''}})
+    }, 1800000)
+
+    User.findOneAndUpdate({email: email}, {$set: {captcha: captcha}})
+    .then((result) => {
+        if (result === null) return Promise.resolve(null)
+        mailTransporter.sendMail({
+            from: {
+                name: 'quickSourcing',
+                address: '296741334@qq.com'
+            },
+            to: email,
+            subject: `你此次重置密码的验证码是${captcha}`,
+            html: generateHtmlMail(captcha)
+        })
+    })
+    .then(() => res.send('ok'))
+    .catch((err) => next(err))
+
+    res.send('ok')
+}
+
+export function test(req, res, next) {
+    const email = req.body
+    console.log(email)
+    User.findOne({email: email}, 'asdasdas')
+    .then((t) => {
+        if (!t) console.log(1111111111111111)
+        console.log(t)
+        res.send(t)
     })
     .catch(err => next(err))
+}
+
+export function resetPassword(req, res, next) {
+    const  password  = req.body
+    const { email } = req.params
+    User.findOne({ email: email }, 'password')
+    .then((result) => {
+        result.password = password
+        return result.save()
+    })
+    .then(() => res.status(200).send('ok'))
+    .catch(err => next(err))
+}
+
+export function validateCaptcha(req, res, next) {
+    const { email } = req.params
+    const captcha = req.body
+    User.findOne({ email: email })
+    .then((result) => {
+        if (result.captcha === captcha) return Promise.resolve(null)
+            return Promise.reject('验证码错误或过期')
+    })
+    .then(() => res.status(200).send('ok'))
+    .catch(err => next(err))
+
 }

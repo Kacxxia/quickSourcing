@@ -26,12 +26,12 @@ const LevelList = ({
                     <RaisedButton 
                         primary={showSubordinate}
                         label='子级'
-                        onClick={() => onSubordinateClick(matchId)}
+                        onTouchTap={() => onSubordinateClick(matchId)}
                     />
                     <RaisedButton 
                         primary={!showSubordinate}
                         label='父级'
-                        onClick={() => onSuperiorClick(matchId)}
+                        onTouchTap={() => onSuperiorClick(matchId)}
                     />
                 </div>
                 {renderCategory(showSubordinate, fetchingSuperior, fetchingSubordinate, subordinatePayload, superiorPayload)}

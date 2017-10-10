@@ -9,7 +9,6 @@ export function getUserProfile(req, res, next) {
     let obj , activityResults
     User.findById(id, 'email username createTime avatar role introduction _id ')
     .then(result => {
-        console.log(result)
         if (!result) {
             res.status(404).send()
         } else {
@@ -65,6 +64,24 @@ export function updateUserProfile(req, res, next) {
     .catch(err => {
         return next(err)
     })
-
-
 }
+
+export function getUserVotes(req, res, next) {
+    const { id } = req.params
+    User.findById(id, 'votes')
+    .then(result => {
+        result = result.votes
+        const re = result.reduce((acc, k) => {
+            acc[k._id] = {
+                upVoted: k.upVoted,
+                downVoted: k.downVoted,
+                outdatedVoted: k.outdatedVoted
+            }
+            return acc
+        }, {})
+        res.status(200).json(re)
+    })
+    .catch(err => {
+        return next(err)
+    })
+} 

@@ -13,6 +13,7 @@ import Divider from 'material-ui/Divider'
 import Drawer from 'material-ui/Drawer'
 
 import AuthSignComponent from './auth-sign'
+import ForgetPasswordBox from './forget-password'
 
 import { authSign, signOut } from '../../actions/auth'
 import { openNavAvatarMenu, closeNavAvatarMenu, goDashboard } from '../../actions/user'
@@ -39,6 +40,7 @@ const Navbar = ({
             <div className='h-100'>
                 {renderAppBar(authenticated, onAuthSign, email, avatar, onOpenMenu, onToggleDrawer)}
                 <AuthSignComponent />
+                <ForgetPasswordBox />
                 <Popover 
                     open={menuOpening}
                     anchorEl={menuTarget}
@@ -122,7 +124,7 @@ function renderAppBar(authenticated, onAuthSign, email, avatar, onOpenMenu, onTo
         iconElementRight: <FlatButton
                                 label='登录'
                                 labelStyle={{color: '#FFFFFF'}}
-                                onClick={onAuthSign}
+                                onTouchTap={onAuthSign}
                           />,
         className: 'align-items-center ',
         style: {

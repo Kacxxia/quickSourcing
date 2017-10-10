@@ -17,7 +17,8 @@ import {
     passwordFocus,
     passwordBlur,
     confirmPasswordFocus,
-    confirmPasswordBlur
+    confirmPasswordBlur,
+    openResetPassword
 } from '../../actions/auth'
 
 import SignInComponent from './auth/sign-in'
@@ -44,15 +45,17 @@ const AuthSignComponent = ({
     onConfirmPasswordFocus,
     emailFocusStatus,
     passwordFocusStatus,
-    confirmPasswordFocusStatus
+    confirmPasswordFocusStatus,
+    onOpenResetPassword
 }) => {
     const attributes = { email, password, confirmPassword, onChangeAccount, onChangeConfirmPassword, onChangePassword, onSignUp, onSignIn, onChangeToSignUp, onChangeToSignIn,onAccountFocus, onAccountBlur,
-    onPasswordFocus, onPasswordBlur, onConfirmPasswordBlur, onConfirmPasswordFocus, emailFocusStatus, passwordFocusStatus, confirmPasswordFocusStatus}
+    onPasswordFocus, onPasswordBlur, onConfirmPasswordBlur, onConfirmPasswordFocus, emailFocusStatus, passwordFocusStatus, confirmPasswordFocusStatus, onOpenResetPassword}
     return (
         <Dialog
             open={isSigning}
             onRequestClose={onAuthSignCancel}
             repositionOnUpdate={false}
+            style={{zIndex: 2000}}
         >
             {renderComponent(isSignIn, attributes, SignUpComponent, SignInComponent)}
         </Dialog>
@@ -85,7 +88,8 @@ export default connect(state => {
         onPasswordFocus: () => dispatch(passwordFocus()),
         onPasswordBlur: () => dispatch(passwordBlur()),
         onConfirmPasswordFocus: () => dispatch(confirmPasswordFocus()),
-        onConfirmPasswordBlur: () => dispatch(confirmPasswordBlur())
+        onConfirmPasswordBlur: () => dispatch(confirmPasswordBlur()),
+        onOpenResetPassword: () => dispatch(openResetPassword())
     }
 })(AuthSignComponent);
 

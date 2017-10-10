@@ -3,12 +3,13 @@ import PropTypes from 'prop-types'
 
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 
 import { 
     chooseAccountErrorText, 
     chooseConfirmPasswordErrorText, 
     choosePasswordErrorText} 
-from './index'
+from '../../../utils'
 
 const LogInComponent = ({
     email,
@@ -21,6 +22,7 @@ const LogInComponent = ({
     onAccountBlur,
     onPasswordFocus,
     onPasswordBlur,
+    onOpenResetPassword,
     emailFocusStatus,
     passwordFocusStatus
 }) => {
@@ -59,18 +61,25 @@ const LogInComponent = ({
                     }}
                 />
             </div>
-            <RaisedButton
-                label='登录'
-                labelColor='#FFFFFF'
-                onClick={onSignIn}
-                backgroundColor='#2eb82e'
-                disabled={typeof(chooseAccountErrorText(emailFocusStatus, email)) !== 'boolean'||typeof(choosePasswordErrorText(passwordFocusStatus, password)) !== 'boolean'|| !email || !password }
-            />
-            <RaisedButton
-                label='去注册'
-                onClick={onChangeToSignUp}
-                style={{marginLeft: '1rem'}}
-            />
+            <div className='d-flex' style={{flexWrap: 'wrap'}}>
+                <RaisedButton
+                    label='登录'
+                    labelColor='#FFFFFF'
+                    onTouchTap={onSignIn}
+                    backgroundColor='#2eb82e'
+                    disabled={typeof(chooseAccountErrorText(emailFocusStatus, email)) !== 'boolean'||typeof(choosePasswordErrorText(passwordFocusStatus, password)) !== 'boolean'|| !email || !password }
+                />
+                <RaisedButton
+                    label='去注册'
+                    onTouchTap={onChangeToSignUp}
+                    style={{marginLeft: '1rem'}}
+                />
+                <FlatButton
+                    label='忘记密码？'
+                    onClick={onOpenResetPassword}
+                    style={{marginLeft: 'auto'}}
+                />
+            </div>
         </div>
     );
 };

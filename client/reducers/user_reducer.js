@@ -1,5 +1,6 @@
 import {
     AUTH_USER,
+    UNAUTH_USER,
     OPEN_NAV_AVATAR_MENU,
     CLOSE_NAV_AVATAR_MENU,
     GET_PROFILE_WAITING,
@@ -39,6 +40,8 @@ const INITIAL_STATE = {
 
 export default function(state = INITIAL_STATE, action) {
     switch(action.type) {
+        case UNAUTH_USER:
+            return Object.assign({}, state, { _id: '' })
         case AUTH_USER:
             return Object.assign({}, state, 
                 { 
@@ -63,7 +66,7 @@ export default function(state = INITIAL_STATE, action) {
                     avatar: action.payload.avatar,
                     createTime: action.payload.createTime,
                     role: action.payload.role,
-                    _id: action.payload._id,
+                    // _id: action.payload._id,
                     activities: action.payload.activities,
                     introduction: action.payload.introduction,
                     edit: {

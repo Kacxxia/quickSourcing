@@ -15,7 +15,7 @@ const AddEntityPaper = ({
                     style={{
                         margin: 12
                     }} 
-                    onClick={() => {onOpenCreateModal(initialTags)}}
+                    onTouchTap={() => {onOpenCreateModal(initialTags)}}
                 />
         </Paper>
     );

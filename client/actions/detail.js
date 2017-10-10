@@ -1,4 +1,4 @@
-
+import jwtDecode from 'jwt-decode'
 import {
     BREAD_GO,
     BREAD_BACK,
@@ -48,10 +48,12 @@ import {
     EDIT_TAG_REMOVE_CANCEL,
     EDIT_TAG_ADD_CHANGE,
     EDIT_TAG_ADD_FILTER_CHANGE,
-    EDIT_DONE
+    EDIT_DONE,
+    GET_USER_VOTE_INFO_SUCCESS
 } from './types'
 
 import { API_URL, cookies } from './index'
+import { needAuthPopoverOpen } from './auth'
 import { mindError } from './error'
 
 
@@ -141,8 +143,10 @@ export function postVoteSuccess(payload) {
     }
 }
 
-export function upVote(_id, upVoteStatus, downVoteStatus, entityId) {
-    return dispatch => {
+export function upVote(_id, upVoteStatus, downVoteStatus, entityId, target) {
+    return (dispatch, getState) => {
+        const authenticated = getState().auth.authenticated
+        if(!authenticated) return dispatch(needAuthPopoverOpen(target, '喜欢这个资源？'))
         dispatch(upVoteAction(_id))
         let fetchPromise 
         if (!upVoteStatus && !downVoteStatus){
@@ -158,8 +162,10 @@ export function upVote(_id, upVoteStatus, downVoteStatus, entityId) {
     }
 }
 
-export function downVote(_id, downVoteStatus, upVoteStatus, entityId) {
-    return dispatch => {
+export function downVote(_id, downVoteStatus, upVoteStatus, entityId, target) {
+    return (dispatch, getState) => {
+        const authenticated = getState().auth.authenticated
+        if(!authenticated) return dispatch(needAuthPopoverOpen(target, '不喜欢这个资源？'))
         dispatch(downVoteAction(_id))
         let fetchPromise
         if (!upVoteStatus && !downVoteStatus){
@@ -175,8 +181,10 @@ export function downVote(_id, downVoteStatus, upVoteStatus, entityId) {
     }
 }
 
-export function outdatedVote(_id, status, entityId) {
-    return dispatch => {
+export function outdatedVote(_id, status, entityId, target) {
+    return (dispatch, getState) => {
+        const authenticated = getState().auth.authenticated
+        if(!authenticated) return dispatch(needAuthPopoverOpen(target, '觉得这个资源已经过时了？'))
         dispatch(outdatedVoteAction(_id))
         let fetchPromise
         if(status) {
@@ -267,10 +275,12 @@ function voteRequest(type, id) {
         default:
             break;
     }
+    const token = cookies.get('token')
     const request = {
         method: 'POST',
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "Authorization": token
         },
         body: JSON.stringify(body)
     }
@@ -523,4 +533,37 @@ export function editTagAddChange(values) {
 
 export function editTagAddFilterChange(text) {
     return { type: EDIT_TAG_ADD_FILTER_CHANGE, text}
+}
+
+export function getUserVoteInfo() {
+    return dispatch => {
+        const token = cookies.get('token')
+        const { _id } = jwtDecode(token)
+        const req = {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+            }
+        }
+        fetch(`${API_URL}/users/${_id}/votes`, req)
+        .then(response => {
+            if (response.ok) {
+                response.json().then(payload => {
+                    dispatch(getUserVoteInfoSuccess(payload)) 
+                })
+            } else {
+                response.text().then(err => {
+                    dispatch(mindError(err))
+                })
+            }
+        })
+        .catch(err => {
+            dispatch(mindError(err))
+        })
+    }
+}
+
+export function getUserVoteInfoSuccess(payload) {
+    return { type: GET_USER_VOTE_INFO_SUCCESS, payload}
 }

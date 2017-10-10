@@ -6,7 +6,6 @@ import Dashboard from './dashboard'
 class DashboardBox extends Component {
     constructor(props) {
         super(props)
-        console.log(this)
         this.onGetUserProfile = this.props.onGetUserProfile
     }
     shouldComponentUpdate(nextProps) {

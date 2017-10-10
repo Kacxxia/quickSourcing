@@ -20,11 +20,11 @@ const DetailHeader = ({editStatus, onCancelClick, onSubmitClick, onEditClick, on
     const editCancelChooseActions = [
         <RaisedButton 
             label='取消'
-            onClick={onEditCancelQuit}
+            onTouchTap={onEditCancelQuit}
         />,
         <RaisedButton
             label='退出'
-            onClick={onEditCancelConfirm}
+            onTouchTap={onEditCancelConfirm}
             primary={true}
             style={{marginLeft: '1rem'}}
         />
@@ -63,7 +63,7 @@ export default connect(null, dispatch => {
 })(DetailHeader);
 
 DetailHeader.propTypes = {
-    editStatus: PropTypes.bool.isRequired,
+    editStatus: PropTypes.number.isRequired,
     onCancelClick: PropTypes.func.isRequired,
     onSubmitClick: PropTypes.func.isRequired,
     onEditClick: PropTypes.func.isRequired,

@@ -12,15 +12,15 @@ import Navbar from './main/navbar'
 import Footer from './main/footer'
 import ModalContent from './main/create-entity-modal/modal-content'
 import ErrorDiv from './main/error-div'
-
+import NeedAuthPopover from './general/need-auth-popover'
 import DashboardBox from './user/dashboard-box'
-import { autoLogIn, updateToken } from '../actions/auth'
+
+import { autoLogIn } from '../actions/auth'
 import { getTagsAndEntities, clearInfo } from '../actions/main'
 
 class App extends Component {
     componentDidMount() {
         this.props.onAutoLogIn()
-        updateToken()
         this.props.onGetTagsAndEntities()
     }
     render() {
@@ -51,6 +51,7 @@ class App extends Component {
                     <ModalContent />
                 </Dialog>
                 <ErrorDiv />
+                <NeedAuthPopover />
             </div>
         );
     }

@@ -48,7 +48,8 @@ import {
     EDIT_TAG_REMOVE_START,
     EDIT_TAG_ADD_CHANGE,
     EDIT_TAG_ADD_FILTER_CHANGE,
-    EDIT_DONE
+    EDIT_DONE,
+    GET_USER_VOTE_INFO_SUCCESS
 } from '../actions/types'
 
 const INITIAL_STATE = {
@@ -116,6 +117,7 @@ export default function (state = INITIAL_STATE, action) {
         case RESOURCE_UP_VOTE:
         case RESOURCE_OUTDATED_VOTE:
         case RESOURCE_DOWN_VOTE:
+        case GET_USER_VOTE_INFO_SUCCESS:
             return Object.assign({}, state, {resourceDetail: handleResourceDetail(state.resourceDetail, action)})
         case POST_VOTE_SUCCESS:
             return Object.assign({}, state, { 
@@ -201,6 +203,7 @@ export default function (state = INITIAL_STATE, action) {
                     tagAddingNames: state.tagEdit.tagAddingNames, 
                     tagRemovingIndex: -1
                 }})
+
         default: 
             return state
     }
@@ -227,6 +230,7 @@ function handleResourceDetail(state, action) {
         case RESOURCE_UP_VOTE:
         case RESOURCE_OUTDATED_VOTE:
         case RESOURCE_DOWN_VOTE:
+        case GET_USER_VOTE_INFO_SUCCESS:
             return Object.assign({}, state, 
             { visited: visit(state.visited, action)})
         default: 
@@ -251,9 +255,19 @@ function visit(state, action) {
         case RESOURCE_OUTDATED_VOTE:
             return Object.assign({}, state, 
             { [action._id]: vote(state[action._id], action)})
+        case GET_USER_VOTE_INFO_SUCCESS:
+            return handleGetUserVote(state, action)
         default: 
             return state
     }
+}
+
+function handleGetUserVote(state, action) {
+    let update = Object.assign({}, state)
+    for (var p in action.payload) {
+        update[p] = action.payload[p]
+    }
+    return update
 }
 
 function vote(state, action) {

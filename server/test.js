@@ -1,3 +1,3 @@
-const regexp = /^https?/
-console.log(regexp.test('http://www'))
-console.log(regexp.test('htt//www'))
+let a = {}
+a.b.c = 1
+console.log(a)

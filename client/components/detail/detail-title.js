@@ -55,6 +55,6 @@ function editComponent(editStatus, content, editHandler) {
 
 DetailTitle.propTypes = {
     entity: PropTypes.object.isRequired,
-    editStatus: PropTypes.bool.isRequired,
+    editStatus: PropTypes.number.isRequired,
     onChangeName: PropTypes.func.isRequired
 }

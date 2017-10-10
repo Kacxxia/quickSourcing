@@ -9,12 +9,13 @@ import Pagination from '../general/pagination'
 import EntityList from '../entities/entity-list'
 import { intersection } from '../../utils'
 
-import { nextPage, prevPage, specificPage, updateTagFilter, updateNameFilter } from '../../actions/main'
+import { nextPage, prevPage, specificPage, updateTagFilter, updateNameFilter, getTagsAndEntities } from '../../actions/main'
 
 import { breadGoEntity } from '../../actions/detail'
 class Entities extends Component {
     componentDidMount(){
         this.props.onClearBread()
+        this.props.onGetTagsAndEntities()
     }
     render(){
         const maxDisplay = 8
@@ -94,7 +95,8 @@ function mapDispatchToProps(dispatch) {
         onSpecPage: (page) => dispatch(specificPage(page)),
         onUpdateTagId: (tag, id) => dispatch(updateTagFilter(tag, id)),
         onUpdateNameFilter: (value) => dispatch(updateNameFilter(value)),
-        onClearBread: () => dispatch(breadGoEntity())
+        onClearBread: () => dispatch(breadGoEntity()),
+        onGetTagsAndEntities: () => dispatch(getTagsAndEntities())
     }
 }
 
