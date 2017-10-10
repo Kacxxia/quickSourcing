@@ -14,12 +14,13 @@ import ModalContent from './main/create-entity-modal/modal-content'
 import ErrorDiv from './main/error-div'
 
 import DashboardBox from './user/dashboard-box'
-import { autoLogIn } from '../actions/auth'
+import { autoLogIn, updateToken } from '../actions/auth'
 import { getTagsAndEntities, clearInfo } from '../actions/main'
 
 class App extends Component {
     componentDidMount() {
         this.props.onAutoLogIn()
+        updateToken()
         this.props.onGetTagsAndEntities()
     }
     render() {

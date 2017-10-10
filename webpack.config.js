@@ -1,4 +1,3 @@
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const path = require('path')
 const config = {
     context: __dirname,
@@ -10,13 +9,6 @@ const config = {
     module: {
         rules: [
             {
-                test: /\.css$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: 'css-loader'
-                })
-            },
-            {
                 exclude: /node_modules/,
                 test: /jsx?$/,
                 loader: 'babel-loader',
@@ -27,10 +19,10 @@ const config = {
         ]
     },
     externals: {
-       // "react": 'React',
-       // "react-dom": 'ReactDOM',
+        //    "react": 'React',
+        //    "react-dom": 'ReactDOM'
         "redux": 'Redux',
-       // "react-redux": 'ReactRedux',
+        // "react-redux": 'ReactRedux',
         "redux-thunk": 'ReduxThunk',
         "reselect": 'Reselect',
         "history": 'History',
@@ -42,10 +34,7 @@ const config = {
         contentBase: path.resolve(__dirname, 'static'),
         compress: true
     },
-    devtool: "inline-source-map",
-    plugins: [
-        new ExtractTextPlugin("style.css")
-    ]
+    devtool: "inline-source-map"
 }
 
 module.exports = config

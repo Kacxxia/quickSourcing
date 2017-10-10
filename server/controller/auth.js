@@ -81,3 +81,12 @@ export function updateToken(req, res) {
         token: `JWT ${token}`
     })
 }
+
+export function autoSignInAuth(req, res, next) {
+    const { _id } = req.user 
+    User.findById(_id, '_id avatar email')
+    .then(result => {
+        res.status(200).json(result)
+    })
+    .catch(err => next(err))
+}

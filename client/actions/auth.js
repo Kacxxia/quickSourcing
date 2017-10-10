@@ -26,36 +26,51 @@ export function autoLogIn() {
         let token = cookies.get('token')
         console.log(token)
         if (token) {
-            const tokenDecoded = jwtDecode(token)
-            console.log(tokenDecoded)
-            
-            const { email, avatar, _id } = tokenDecoded
-            const user = { email, avatar, _id}
-            dispatch({type: AUTH_USER, user: user})
-
-            setTimeout(() => {
-                let token = cookies.get('token')
-                if (token)  {//注销后挂着页面
-                    const request = {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "text/plain",
-                            "Authorization": token
-                        }
-                    }
-                    fetch(`${API_URL}/token`, request)
-                    .then((response) => {
-                        if(response.ok) {
-                            response.json().then(payload => {
-                                cookies.remove('token')
-                                cookies.set('token', payload.token, {path: '/'})
-                            })
-                        }
+            const request = {
+                method: 'GET',
+                headers: {"Authorization": token}
+            }
+            fetch(`${API_URL}/auth`, request)
+            .then(response => {
+                if (response.ok) {
+                    response.json().then(payload => {
+                        const { email, avatar, _id } = payload
+                        const user = { email, avatar, _id }
+                        dispatch({type: AUTH_USER, user: user})
                     })
                 }
-                }, 1800000)   
+            })
+            .catch(err => {
+                dispatch(mindError(err))
+            })
+            
         }
     }
+}
+
+export function updateToken() {
+    setInterval(() => {
+        let token = cookies.get('token')
+        if (token)  {
+            const request = {
+                method: "GET",
+                headers: {
+                    "Content-Type": "text/plain",
+                    "Authorization": token
+                }
+            }
+            fetch(`${API_URL}/token`, request)
+            .then((response) => {
+                if(response.ok) {
+                    response.json().then(payload => {
+                        cookies.remove('token')
+                        cookies.set('token', payload.token, {path: '/'})
+                    })
+                }
+            })
+            .catch(err => console.log(err))
+        }
+        }, 3600000)   
 }
 
 
@@ -176,3 +191,4 @@ export function signOut() {
     cookies.remove('token', { path: '/' })
     return { type: UNAUTH_USER }
 }
+
