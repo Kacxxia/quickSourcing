@@ -1,4 +1,3 @@
-import franc from 'franc-min'
 import jwt from 'jsonwebtoken'
 import nodeMailer from 'nodemailer'
 import config from './config/main'
@@ -15,9 +14,7 @@ auth: {
     pass: 'ydnuwvffqylrbijc'
 }})
 
-export function detectLanguage(text) {
-    return franc(text, {whitelist: ['cmn', 'eng', 'jpn']})
-}
+
 
 export function generateToken(user)  {
     return jwt.sign(user, config.secret, { expiresIn: '7d' })
