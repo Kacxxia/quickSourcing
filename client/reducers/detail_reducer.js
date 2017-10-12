@@ -210,6 +210,7 @@ export default function (state = INITIAL_STATE, action) {
 }
 
 function addBread(origin, target) {
+    if (origin[origin.length - 1] === target) return origin
     return origin.concat([target])
 }
 

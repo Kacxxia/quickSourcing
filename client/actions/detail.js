@@ -97,7 +97,7 @@ export function getDetail(id) {
             }
         })
         .catch((error) => {
-            dispatch(mindError(error))
+            dispatch(mindError(error.message))
             dispatch(getDetailFailed(error))
         })
     }
@@ -210,7 +210,7 @@ function postVoteSuccessHandler(dispatch) {
 
 function postVoteErrorHandler(dispatch) {
     return (error) => {
-        dispatch(mindError(error))
+        dispatch(mindError(error.message))
             }
 }
 
@@ -377,7 +377,7 @@ export function clickSuperior(id) {
                 }
             })
             .catch(error => {
-                dispatch(mindError(error))
+                dispatch(mindError(error.message))
                 dispatch({type: DETAIL_SUPERIOR_FAILED})
             })
         }
@@ -403,7 +403,7 @@ export function clickSubordinate(id) {
                 }
             })
             .catch(error => {
-                dispatch(mindError(error))
+                dispatch(mindError(error.message))
                 dispatch({type: DETAIL_SUBORDINATE_FAILED})
             })
         }
@@ -466,7 +466,7 @@ export function editEntitySubmit() {
             }
         })
         .catch(err => {
-            dispatch(mindError(err))
+            dispatch(mindError(err.message))
         })
     }
 }
@@ -555,12 +555,12 @@ export function getUserVoteInfo() {
             } else {
                 response.text().then(err => {
                     if(!err) return dispatch(mindError('网络错误'))
-                    dispatch(mindError(err))
+                    dispatch(mindError(err.message))
                 })
             }
         })
         .catch(err => {
-            dispatch(mindError(err))
+            dispatch(mindError(err.message))
         })
     }
 }

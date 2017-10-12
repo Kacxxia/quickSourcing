@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import passport from 'passport'
+import favicon from 'serve-favicon'
 import config from './config/main'
 import router from './router'
 import path from 'path'
@@ -12,8 +13,9 @@ mongoose.connect(config.database)
 const app = express()
 
 app.use('/static', express.static(path.resolve(__dirname, 'static')))
+app.use(favicon(path.resolve(__dirname, 'static', 'favicon.ico')))
 
-app.use(bodyParser.json())
+app.use(bodyParser.json({limit: '3mb'}))
 app.use(bodyParser.text())
 app.use(morgan('dev'))
 app.use(passport.initialize())

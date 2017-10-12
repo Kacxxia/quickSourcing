@@ -12,7 +12,7 @@ import {
     postResource,
     postEdit
 } from './controller/entity'
-import { signUp, signIn, updateToken, sendResetPasswordCaptcha, test, resetPassword, validateCaptcha } from './controller/auth'
+import { signUp, signIn, updateToken, sendResetPasswordCaptcha, test, resetPassword, validateCaptcha, cookieSignInGetInfo } from './controller/auth'
 import { getUserProfile, updateUserProfile, getUserVotes } from './controller/user'
 
 import passportInit from './config/passport'
@@ -38,6 +38,7 @@ module.exports = (app) => {
     apiRoutes.get('/token', jwtAuth, updateToken)
     apiRoutes.post('/users', signUp)
     apiRoutes.post('/auth', signIn)
+    apiRoutes.get('/auth', jwtAuth, cookieSignInGetInfo)
     apiRoutes.get('/users/:id/profiles', getUserProfile)
     apiRoutes.get('/users/:id/votes', jwtAuth, getUserVotes)
     apiRoutes.post('/users/:id/profiles', updateUserProfile)

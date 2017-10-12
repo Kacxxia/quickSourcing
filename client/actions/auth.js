@@ -46,7 +46,6 @@ import { mindError } from './error'
 export function autoLogIn() {
     return dispatch => {
         let token = cookies.get('token')
-        console.log(token)
         if (token) {
             const request = {
                 method: 'GET',
@@ -55,15 +54,21 @@ export function autoLogIn() {
             fetch(`${API_URL}/auth`, request)
             .then(response => {
                 if (response.ok) {
-                    response.json().then(payload => {
+                    response.json().then((payload) => {
                         const { email, avatar, _id } = payload
                         const user = { email, avatar, _id }
-                        dispatch({type: AUTH_USER, user: user})
+                        return dispatch({type: AUTH_USER, user: user})
                     })
+                }
+                else {
+                    if (response.status === 401) {
+                        dispatch(mindError('身份验证信息过期'))
+                    }
+                        dispatch(mindError('网络错误'))
                 }
             })
             .catch(err => {
-                dispatch(mindError(err))
+                dispatch(mindError(err.message))
             })
             
         }
@@ -142,7 +147,7 @@ export function signIn() {
             } else {
                 response.text().then(err => {
                     if(!err) return dispatch(mindError('网络错误'))
-                    dispatch(mindError(err))
+                    dispatch(mindError(err.message))
                 })
             }
         })
@@ -175,7 +180,7 @@ export function signUp() {
             } else {
                 response.text().then(err => {
                     if(!err) return dispatch(mindError('网络错误'))
-                    dispatch(mindError(err))
+                    dispatch(mindError(err.message))
                 })
             }
         })
@@ -263,12 +268,12 @@ export function resetPasswordSendEmail() {
             } else {
                 response.text().then(err => {
                     if(!err) return dispatch(mindError('网络错误'))
-                    dispatch(mindError(err))
+                    dispatch(mindError(err.message))
                 })
             }
         })
         .catch(err => {
-            mindError(err)
+            mindError(err.message)
         })
 
     }
@@ -319,12 +324,12 @@ export function tryResetPassword() {
                     mindError('验证码错误或过期')
                 } else {
                     if(!err) return dispatch(mindError('网络错误'))
-                    response.text().then(err => mindError(err))
+                    response.text().then(err => mindError(err.message))
                 }
             }
         })
         .catch(err => {
-            mindError(err)
+            mindError(err.message)
         })
     }
 }
@@ -344,12 +349,12 @@ export function doResetPassword() {
             else {
                     response.text().then(err => {
                         if(!err) return dispatch(mindError('网络错误'))
-                        dispatch(mindError(err))
+                        dispatch(mindError(err.message))
                     })
             }
         })
         .catch(err => {
-            dispatch(mindError(err))
+            dispatch(mindError(err.message))
         })
     }
 }

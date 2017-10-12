@@ -1,6 +1,6 @@
 module.exports = {
     database: 'mongodb://127.0.0.1:27017',
-    port: 80,
+    port: process.env.NODE_ENV === 'production' ? 80 : 3000,
     secret: "module Unsupported.1.4+",
     defaultAvatar: "http://res.cloudinary.com/kacxxia/image/upload/v1505863986/%E4%B8%8B%E8%BD%BD_1_jmm3et.jpg",
     cloudinary: {

@@ -58,13 +58,13 @@ export function getUserProfile(id) {
                 } else {
                     response.text().then(err => {
                         if(!err) return dispatch(mindError('网络错误'))
-                        dispatch(mindError(err))
+                        dispatch(mindError(err.message))
                     })
                 }
             }
         })
         .catch(err => {
-            dispatch(mindError(err))
+            dispatch(mindError(err.message))
         })
     }
 }
@@ -103,14 +103,15 @@ export function editProfilePost(payload, id) {
             if(response.ok) {
                 dispatch(editProfileSuccess(payload))
             } else {
+                console.log(response)
                 response.text().then(err => {
                     if(!err) return dispatch(mindError('网络错误'))
-                    dispatch(mindError(err))
+                    dispatch(mindError(err.message))
                 })
             }
         })
         .catch(err => {
-            dispatch(mindError(err))
+            dispatch(mindError(err.message))
         })
     }
 }

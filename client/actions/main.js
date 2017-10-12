@@ -31,6 +31,8 @@ import {
     cookies
 } from './index'
 
+import { mindError } from './error'
+
 function getTags() {
     return fetch(`${API_URL}/tags`)
 }
@@ -42,20 +44,24 @@ export function getTagsAndEntities() {
     return dispatch => {
         Promise.all([getEntities(), getTags()])
         .then((responses) => {
-            let jsons = []
-            for (let i=0; i<responses.length; i++) {
-                if (responses[i]){
-                    jsons.push(responses[i].json())
+            if (responses[0].ok && responses[1].ok) {
+                let jsons = []
+                for (let i=0; i<responses.length; i++) {
+                    if (responses[i]){
+                        jsons.push(responses[i].json())
+                    }
                 }
+                return Promise.all(jsons)
+            } else {
+                dispatch(mindError('网络错误'))
             }
-            return Promise.all(jsons)
         })
         .then((datas) => {
             dispatch(getEntitiesDone(datas[0]))        
             dispatch(getTagsDone(datas[1]))        
         })
         .catch((error) => {
-            dispatch(throwError(error))
+            dispatch(mindError(error.message))
         })
     }
 }
@@ -220,11 +226,11 @@ export function postEntity(payload){
                         dispatch(clearInfo(payload.tags))
                     }, 1000)
                 } else {
-                    dispatch(throwError('网络错误'))
+                    dispatch(mindError('网络错误'))
                 }
             })
             .catch((error) => {
-                dispatch(throwError(error))
+                dispatch(mindError(error.message))
             })
 
     }

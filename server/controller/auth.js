@@ -69,6 +69,15 @@ export function signIn(req, res, next) {
 
 }
 
+export function cookieSignInGetInfo(req, res, next) {
+    const { _id } = req.user
+    User.findById(_id, "_id email avatar")
+    .then(result => {
+        res.status(200).json(result)
+    })
+    .catch(err => next(err))
+}
+
 export function updateToken(req, res) {
     const { email, avatar, _id } = req.user
     const token = generateToken({
