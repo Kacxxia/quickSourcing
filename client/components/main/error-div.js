@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from  'react-redux'
-import SnackBar from 'material-ui/SnackBar'
+import SnackBar from 'material-ui/Snackbar'
 
 import { closeError } from '../../actions/error'
 const ErrorDiv = ({

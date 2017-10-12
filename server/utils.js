@@ -3,7 +3,7 @@ import nodeMailer from 'nodemailer'
 import config from './config/main'
 
 
-export const API_URL = 'http://45.77.131.76:8080/api'
+export const API_URL = 'http://45.77.131.76:80/api'
 
 export const mailTransporter = nodeMailer.createTransport({
     host: 'smtp.qq.com',
