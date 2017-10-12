@@ -147,7 +147,7 @@ export function signIn() {
             } else {
                 response.text().then(err => {
                     if(!err) return dispatch(mindError('网络错误'))
-                    dispatch(mindError(err.message))
+                    dispatch(mindError(err))
                 })
             }
         })
@@ -180,7 +180,7 @@ export function signUp() {
             } else {
                 response.text().then(err => {
                     if(!err) return dispatch(mindError('网络错误'))
-                    dispatch(mindError(err.message))
+                    dispatch(mindError(err))
                 })
             }
         })
@@ -268,7 +268,7 @@ export function resetPasswordSendEmail() {
             } else {
                 response.text().then(err => {
                     if(!err) return dispatch(mindError('网络错误'))
-                    dispatch(mindError(err.message))
+                    dispatch(mindError(err))
                 })
             }
         })
@@ -324,7 +324,7 @@ export function tryResetPassword() {
                     mindError('验证码错误或过期')
                 } else {
                     if(!err) return dispatch(mindError('网络错误'))
-                    response.text().then(err => mindError(err.message))
+                    response.text().then(err => mindError(err))
                 }
             }
         })
@@ -349,7 +349,7 @@ export function doResetPassword() {
             else {
                     response.text().then(err => {
                         if(!err) return dispatch(mindError('网络错误'))
-                        dispatch(mindError(err.message))
+                        dispatch(mindError(err))
                     })
             }
         })

@@ -58,7 +58,7 @@ export function getUserProfile(id) {
                 } else {
                     response.text().then(err => {
                         if(!err) return dispatch(mindError('网络错误'))
-                        dispatch(mindError(err.message))
+                        dispatch(mindError(err))
                     })
                 }
             }
@@ -106,7 +106,7 @@ export function editProfilePost(payload, id) {
                 console.log(response)
                 response.text().then(err => {
                     if(!err) return dispatch(mindError('网络错误'))
-                    dispatch(mindError(err.message))
+                    dispatch(mindError(err))
                 })
             }
         })

@@ -555,7 +555,7 @@ export function getUserVoteInfo() {
             } else {
                 response.text().then(err => {
                     if(!err) return dispatch(mindError('网络错误'))
-                    dispatch(mindError(err.message))
+                    dispatch(mindError(err))
                 })
             }
         })
