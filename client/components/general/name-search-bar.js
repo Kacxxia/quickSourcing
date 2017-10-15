@@ -4,9 +4,9 @@ import PropTypes from 'prop-types'
 import Paper from 'material-ui/Paper'
 import TextField from 'material-ui/TextField'
 
-const NameSearchBar = ({onUpdateNameFilter, nameFilterValue}) => {
+const NameSearchBar = ({onUpdateNameFilter, nameFilterValue, style}) => {
     return (
-        <div className='d-flex justify-content-center' >
+        <div className='d-flex justify-content-center' style={style}>
             <Paper style={{padding: `0 1rem`}}>
                 <TextField 
                     hintText='输入名称以过滤'
@@ -24,5 +24,6 @@ export default NameSearchBar;
 
 NameSearchBar.propTypes = {
     nameFilterValue: PropTypes.string.isRequired,
-    onUpdateNameFilter: PropTypes.func.isRequired
+    onUpdateNameFilter: PropTypes.func.isRequired,
+    style: PropTypes.object
 }

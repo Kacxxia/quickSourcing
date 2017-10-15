@@ -4,8 +4,20 @@ import PropTypes from 'prop-types'
 import TextField from 'material-ui/TextField'
 import RaisedButton from 'material-ui/RaisedButton'
 import AddResource from '../../general/add-resource'
+import TagStore from '../../general/tag-store'
 import TagSearchBarCreateEntity from '../../general/tag-search-bar-create-entity'
-import { addResource, removeResource, changeResource, changeName, clearInfo, postEntity } from '../../../actions/main'
+import { 
+    addResource, 
+    removeResource, 
+    changeResource, 
+    changeName, 
+    clearInfo, 
+    postEntity, 
+    addEntityOpenTagStore, 
+    addEntityAddTagFromStoreCancel,  
+    addEntityAddTagFromStoreSubmit,
+    searchByManyTags
+} from '../../../actions/main'
 const ModalContent =({
     onAddResource, 
     onRemoveResource,
@@ -13,9 +25,13 @@ const ModalContent =({
     onChangeName,
     onClearInfo,
     onPostEntity, 
+    onOpenTagStore,
+    onAddTagFromStoreCancel,
+    onAddTagFromStoreSubmit,
     resource,      
     entityName,
-    tags
+    tags,
+    onSearchByManyTags
 }) => {
     const buttonStyle={
         margin: 12
@@ -29,7 +45,18 @@ const ModalContent =({
                     onChange={(e, value) => onChangeName(value)}
                     value={entityName}
                 />
-                <TagSearchBarCreateEntity  />
+                <div className='d-flex align-items-center'>
+                    <TagSearchBarCreateEntity  />
+                    <TagStore 
+                        onCancelAction={onAddTagFromStoreCancel}
+                        onSubmitAction={onAddTagFromStoreSubmit}
+                    />
+                    <RaisedButton 
+                            label='标签库'
+                            secondary={true}
+                            onClick={onOpenTagStore}
+                    />
+                </div>
                 <AddResource  
                     resource={resource} 
                     onRemoveResource={onRemoveResource}
@@ -44,7 +71,7 @@ const ModalContent =({
                     label='创建' 
                     style={buttonStyle} 
                     onTouchTap={() => 
-                        onPostEntity({entityName, tags, resource})
+                        onPostEntity({entityName, tags, resource}).then(() => setTimeout(() => onSearchByManyTags(tags)))
                     } 
                     disabled={!checkForm(entityName, tags, resource)}
                 />      
@@ -66,7 +93,11 @@ export default connect((state) => {
         onResourceChange: (id, value, prop) => dispatch(changeResource(id, value, prop)),
         onChangeName: (value) => dispatch(changeName(value)),
         onClearInfo: (inputTags) => dispatch(clearInfo(inputTags)),
-        onPostEntity: (payload) => dispatch(postEntity(payload))
+        onPostEntity: (payload) => dispatch(postEntity(payload)),
+        onOpenTagStore: () => dispatch(addEntityOpenTagStore()),
+        onAddTagFromStoreCancel: () => dispatch(addEntityAddTagFromStoreCancel()),
+        onAddTagFromStoreSubmit: (tags) => dispatch(addEntityAddTagFromStoreSubmit(tags)),
+        onSearchByManyTags: (tags) => dispatch(searchByManyTags(tags))
     } 
 })(ModalContent);
 
@@ -77,6 +108,7 @@ ModalContent.propTypes = {
     onChangeName: PropTypes.func.isRequired,
     onClearInfo: PropTypes.func.isRequired,
     onPostEntity: PropTypes.func.isRequired,
+    onOpenTagStore: PropTypes.func.isRequired,
     resource: PropTypes.object.isRequired,
     entityName: PropTypes.string.isRequired,
     postStatus: PropTypes.number.isRequired,

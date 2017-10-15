@@ -322,6 +322,8 @@ export function postEdit(req, res, next) {
     }
     if (authenticated) {
         update.$addToSet.contributors = decoded._id
+    } else {
+        delete update.$addToSet
     }
     Entity.findByIdAndUpdate(id, update)
     .then((entity) => {

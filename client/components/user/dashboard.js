@@ -119,12 +119,11 @@ const Dashboard = ({
                         {editProfileButton}
                     </div>
                 </div>
-                <div style={{height: '60%', overflow: 'auto'}}>
-                    <div style={{marginTop: '2rem', fontSize: '2rem'}}>
+                <div style={{height: '60%'}} className='d-flex flex-column'>
+                    <div style={{marginTop: '1rem', fontSize: '2rem'}}>
                         近期活动
                     </div>
-                    <Table
-                        >
+                    <Table>
                         <TableHeader displaySelectAll={false}>
                             <TableRow style={{overflow: 'auto'}}>
                                 <TableHeaderColumn>类型</TableHeaderColumn>
@@ -132,7 +131,7 @@ const Dashboard = ({
                                 <TableHeaderColumn style={{overflow: 'auto'}}>时间</TableHeaderColumn>
                             </TableRow>
                         </TableHeader>
-                        <TableBody displayRowCheckbox={false}>
+                        <TableBody displayRowCheckbox={false} style={{overflowY: 'auto'}}>
                             {renderActivities(activities)}
                         </TableBody>
                     </Table>

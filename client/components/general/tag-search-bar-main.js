@@ -2,9 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
-import { createSearchAction } from 'redux-search'
-    const searchEntities = createSearchAction('entities')
-import { deleteChip, updateTagInput, updateTagSearch} from '../../actions/main'
+import { deleteChip, updateTagInput, updateTagSearch, searchEntities, deleteSearchRecord} from '../../actions/main'
 import { CLIENT_ROOT_URL } from '../../actions/index'
 
 import TagSearchBar from './tag-search-bar'
@@ -16,7 +14,8 @@ const TagSearchBarMain = ({
     onUpdateTagSearch,
     onUpdateTagInput,
     changeLocationIfHome,
-    searchByTag
+    searchByTag,
+    onDeleteSearchRecord
 }) => {
     return (
         <TagSearchBar 
@@ -27,7 +26,10 @@ const TagSearchBarMain = ({
             onUpdateTagSearch={onUpdateTagSearch}
             onUpdateTagInput={onUpdateTagInput}
             changeLocationIfHome={changeLocationIfHome}
-            searchByTag={searchByTag} />
+            searchByTag={searchByTag} 
+            doSearchOnUpdate={true}
+            onDeleteSearchRecord={onDeleteSearchRecord}
+        />
     );
 };
 
@@ -47,7 +49,8 @@ export default connect((state) => {
                 dispatch(push('/entities'))
             }
         },
-        searchByTag: (tag) => dispatch(searchEntities(tag))
+        searchByTag: (tag) => dispatch(searchEntities(tag)),
+        onDeleteSearchRecord: (tag) => dispatch(deleteSearchRecord(tag))
     }
 })(TagSearchBarMain);
 

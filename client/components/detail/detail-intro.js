@@ -9,29 +9,24 @@ import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/add'
 import Dialog from 'material-ui/Dialog'
 import RaisedButton from 'material-ui/RaisedButton'
-import Menu from 'material-ui/Menu'
-import MenuItem from 'material-ui/MenuItem'
 
 import LevelList from './level-list'
-import NameSearchBar from '../general/name-search-bar'
+import TagStore from '../general/tag-store'
 
 import { 
     editIntro, 
-    editTagAdd, 
+    editTagAdd,
     editTagRemove,
     editTagAddStart,
     editTagRemoveStart,
     editTagAddCancel,
     editTagRemoveCancel,
-    editTagAddChange,
-    editTagAddFilterChange
  } from '../../actions/detail'
 
 const DetailIntro = ({
     entity, 
-    match, 
+    match,
     editStatus,
-    allTags,
     onEditIntro, 
     onEditTagAdd, 
     onEditTagRemove,
@@ -39,39 +34,45 @@ const DetailIntro = ({
     onEditTagRemoveStart,
     onEditTagAddCancel,
     onEditTagRemoveCancel,
-    onEditTagAddChange,
-    tagAddingNames,
-    tagRemovingIndex,
-    onEditTagAddFilterChange,
-    addTagNameFilterValue
+    tagRemovingIndex
 }) => {
     return (
         <div className="h-100 container-fluid">
             <div className='row h-100'>
                 <div className="h-100 col-12 col-sm-3" >
                     <Paper style={{height: `50%`, overflowX:'auto'}} className='d-flex align-items-center px-1' >
-                        {renderIntro(editStatus, entity.introduction, onEditIntro)}
-                    </Paper>
-                    <div className='d-flex flex-wrap' style={{margin: `1rem 0`,padding: `2px 0.5rem`}}>
-                        
-                        {renderTags(editStatus, entity.tags, onEditTagAddStart, onEditTagRemoveStart)}
-                    </div>
+                        <RenderIntro 
+                            editStatus={editStatus}
+                            content={entity.introduction}
+                            onEditIntro={onEditIntro}
+                        />
+                    </Paper>        
+                    <RenderTags 
+                            editStatus={editStatus}
+                            tags={entity.tags} 
+                            onEditTagAddStart={onEditTagAddStart}
+                            onEditTagRemoveStart={onEditTagRemoveStart}
+                    />
                 </div>
                 <div  className="col-12 col-sm-9">
                     <LevelList  matchId={match.params.id}/>
                 </div>
             </div>
-            {renderEditTagDialog(editStatus, onEditTagRemove, onEditTagRemoveCancel, onEditTagAdd, onEditTagAddCancel, onEditTagAddChange, allTags, tagAddingNames, tagRemovingIndex, onEditTagAddFilterChange, addTagNameFilterValue)}
+                <RenderEditTagDialog
+                    editStatus={editStatus}
+                    tagRemovingIndex={tagRemovingIndex}
+                    onEditTagRemove={onEditTagRemove}
+                    onEditTagRemoveCancel={onEditTagRemoveCancel}
+                    onEditTagAdd={onEditTagAdd}
+                    onEditTagAddCancel={onEditTagAddCancel}
+                />
         </div>
     );
 };
 
 export default connect(state => {
     return {
-        allTags: state.searchResource.tags,
-        tagAddingNames: state.detail.tagEdit.tagAddingNames,
         tagRemovingIndex: state.detail.tagEdit.tagRemovingIndex,
-        addTagNameFilterValue: state.detail.tagEdit.addTagNameFilterValue
     }
 }
 , dispatch => {
@@ -82,9 +83,7 @@ export default connect(state => {
         onEditTagAddStart: () => dispatch(editTagAddStart()),
         onEditTagRemoveStart: (index) => dispatch(editTagRemoveStart(index)),
         onEditTagAddCancel: () => dispatch(editTagAddCancel()),
-        onEditTagRemoveCancel: () => dispatch(editTagRemoveCancel()),
-        onEditTagAddChange: (tags) => dispatch(editTagAddChange(tags)),
-        onEditTagAddFilterChange: (text) => dispatch(editTagAddFilterChange(text))
+        onEditTagRemoveCancel: () => dispatch(editTagRemoveCancel())
     }
 })(DetailIntro);
 
@@ -92,7 +91,6 @@ DetailIntro.propTypes = {
     entity: PropTypes.object.isRequired, 
     match: PropTypes.object.isRequired, 
     editStatus: PropTypes.number.isRequired,
-    allTags: PropTypes.array.isRequired,
     onEditIntro: PropTypes.func.isRequired, 
     onEditTagAdd: PropTypes.func.isRequired, 
     onEditTagRemove: PropTypes.func.isRequired,
@@ -100,11 +98,7 @@ DetailIntro.propTypes = {
     onEditTagRemoveStart: PropTypes.func.isRequired,
     onEditTagAddCancel: PropTypes.func.isRequired,
     onEditTagRemoveCancel: PropTypes.func.isRequired,
-    onEditTagAddChange: PropTypes.func.isRequired,
-    tagAddingNames: PropTypes.array.isRequired,
-    tagRemovingIndex: PropTypes.number.isRequired,
-    onEditTagAddFilterChange: PropTypes.func.isRequired,
-    addTagNameFilterValue: PropTypes.string.isRequired
+    tagRemovingIndex: PropTypes.number.isRequired
 }
 
 function introJudge(intro) {
@@ -115,18 +109,16 @@ function introJudge(intro) {
     }
 }
 
-function renderIntro(editStatus, content, onEditIntro) {
-    if (!editStatus) {
-        return <span>{introJudge(content)}</span>
-    }
-        return <TextField multiLine={true}
-                        value={content}
-                        onChange={(e, text) => onEditIntro(text)}
-                        id='entityIntroInput'
-                        />
+const RenderIntro = ({editStatus, content, onEditIntro}) => {
+    if (!editStatus) return <span>{introJudge(content)}</span>
+    
+    return <TextField multiLine={true}
+                value={content || '暂无介绍'}
+                onChange={(e, text) => onEditIntro(text)}
+                id='entityIntroInput'
+                />
 }
-
-function renderTags(editStatus, tags, onEditTagAddStart, onEditTagRemoveStart) {
+const RenderTags = ({editStatus, tags, onEditTagAddStart, onEditTagRemoveStart}) => {
     let attributes = {
         style: {
             margin: '2px'
@@ -152,11 +144,18 @@ function renderTags(editStatus, tags, onEditTagAddStart, onEditTagRemoveStart) {
                 </FloatingActionButton>
         )
     }
-
-    return arr
+    
+    return <div className='d-flex flex-wrap' style={{margin: `1rem 0`,padding: `2px 0.5rem`}}>{arr}</div>
 }
 
-function renderEditTagDialog(editStatus, onEditTagRemove, onEditTagRemoveCancel, onEditTagAdd, onEditTagAddCancel, onEditTagChange, allTags, tagAddingNames, tagRemovingIndex, onEditTagAddFilterChange,addTagNameFilterValue) {
+const RenderEditTagDialog =({
+    editStatus, 
+    onEditTagRemove, 
+    onEditTagRemoveCancel, 
+    onEditTagAdd, 
+    onEditTagAddCancel, 
+    tagRemovingIndex
+}) => {
     if (editStatus === 3) {
         return <Dialog
                     open={true}
@@ -180,56 +179,10 @@ function renderEditTagDialog(editStatus, onEditTagRemove, onEditTagRemoveCancel,
                     确定要删除此标签吗？
                 </Dialog>
     } else if (editStatus === 4) {
-        allTags = allTags.filter(tag => {
-            return tag.includes(addTagNameFilterValue)
-        })
-        return <Dialog
-                    modal={true}
-                    title='添加标签'
-                    open={true}
-                    actions={[
-                        <RaisedButton 
-                            label='取消'
-                            onTouchTap={onEditTagAddCancel}
-                        />,
-                        <RaisedButton
-                            label='确定'
-                            onTouchTap={() => {
-                                onEditTagAdd(tagAddingNames)
-                                onEditTagAddCancel()
-                                }
-                            }
-                            style={{marginLeft: '1rem'}}
-                            secondary={true}
-                        />
-                    ]}
-                    onRequestClose={onEditTagAddCancel}
-                >
-                    <NameSearchBar nameFilterValue={addTagNameFilterValue} onUpdateNameFilter={onEditTagAddFilterChange}/>
-                    <Menu
-                        value={tagAddingNames}
-                        multiple={true}
-                        onChange={(e, values) => {
-                            onEditTagChange(values)
-                        }}
-                    >
-                        {
-
-                            allTags.map((tag) => {
-                            return <MenuItem
-                                        key={tag}
-                                        checked={
-                                        tagAddingNames.indexOf(tag) !== -1
-                                        }
-                                        insetChildren={true}
-                                        value={tag}
-                                        primaryText={tag}
-                                    />
-                        
-                        })
-                        }
-                    </Menu>
-                </Dialog>
+        return (<TagStore 
+                    onCancelAction={onEditTagAddCancel}
+                    onSubmitAction={(tagAddingNames) => onEditTagAdd(tagAddingNames)}
+                />)
     } else {
         return null
     }

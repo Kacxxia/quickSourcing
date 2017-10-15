@@ -527,14 +527,6 @@ export function editTagRemoveCancel() {
     return { type: EDIT_TAG_REMOVE_CANCEL}
 }
 
-export function editTagAddChange(values) {
-    return { type: EDIT_TAG_ADD_CHANGE, values}
-}
-
-export function editTagAddFilterChange(text) {
-    return { type: EDIT_TAG_ADD_FILTER_CHANGE, text}
-}
-
 export function getUserVoteInfo() {
     return dispatch => {
         const token = cookies.get('token')

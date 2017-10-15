@@ -1,7 +1,8 @@
 export const ERROR_MIND = 'error_mind',
             ERROR_CLOSE = 'error_close'
 
-export const SEARCH_RECEIVE_RESULT = '@@reduxSearch/receiveResult'
+export const SEARCH_RECEIVE_RESULT = '@@reduxSearch/receiveResult',
+             REDUX_SEARCH_START = '@@reduxSearch/search'
 
 export const GET_TAGS_DONE = 'get_tags_done',
             GET_ENTITIES_DONE = 'get_entities_done',
@@ -102,7 +103,8 @@ export const CHANGE_SHOW_RESOURCE = 'change_show_resource',
 export const DELETE_CHIP = 'delete_chip',
             UPDATE_TAG_ID = 'update_tag_id',
             UPDATE_TAG_SEARCH = 'update_tag_search',
-            UPDATE_TAG_INPUT = 'update_tag_input'
+            UPDATE_TAG_INPUT = 'update_tag_input',
+            DELETE_SEARCH_RECORD = 'delete_search_record'
 
 
 export const NEXT_PAGE = 'next_page',
@@ -121,7 +123,10 @@ export const NEXT_PAGE = 'next_page',
             START_POST_ENTITY = 'start_post_entity',
             DELETE_CHIP_CREATE_ENTITY = 'delete_chip_create_entity',
             UPDATE_TAG_INPUT_CREATE_ENTITY = 'update_tag_input_create_entity',
-            UPDATE_TAG_SEARCH_CREATE_ENTITY = 'update_tag_search_create_entity'
+            UPDATE_TAG_SEARCH_CREATE_ENTITY = 'update_tag_search_create_entity',
+            ADD_ENTITY_OPEN_TAG_STORE = 'add_entity_open_tag_store',
+            ADD_ENTITY_ADD_TAG_FROM_STORE_CANCEL = 'add_entity_add_tag_from_store_cancel',
+            ADD_ENTITY_ADD_TAG_FROM_STORE_SUBMIT = 'add_entity_add_tag_from_store_submit'
 
 export const OPEN_NAV_AVATAR_MENU = 'open_nav_avatar_menu',
             CLOSE_NAV_AVATAR_MENU = 'close_nav_avatar_menu'
@@ -138,3 +143,6 @@ export const GET_PROFILE_DONE = 'get_profile_done',
             EDIT_PROFILE_AVATAR = 'edit_profile_avatar',
             EDIT_PROFILE_USERNAME = 'edit_profile_username',
             EDIT_PROFILE_INTRODUCTION = 'edit_profile_introduction'
+
+export const TAG_STORE_CHANGE_SEARCH = 'tag_store_change_search',
+            TAG_STORE_CHANGE_SELECTED = 'tag_store_change_selected'

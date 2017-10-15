@@ -46,8 +46,6 @@ import {
     EDIT_TAG_ADD_START,
     EDIT_TAG_REMOVE_CANCEL,
     EDIT_TAG_REMOVE_START,
-    EDIT_TAG_ADD_CHANGE,
-    EDIT_TAG_ADD_FILTER_CHANGE,
     EDIT_DONE,
     GET_USER_VOTE_INFO_SUCCESS
 } from '../actions/types'
@@ -64,9 +62,7 @@ const INITIAL_STATE = {
     },
     editStatus: 0, //0不修改， 1正在修改， 2退出修改确认， 3删除标签确认，4添加标签,
     tagEdit: {
-        tagAddingNames: [],
         tagRemovingIndex: -1,
-        addTagNameFilterValue: ''
     },
     prevEntity: {},
     add: {
@@ -189,21 +185,6 @@ export default function (state = INITIAL_STATE, action) {
         case EDIT_TAG_ADD:
         case EDIT_TAG_REMOVE:
             return Object.assign({}, state, { entity: handleEdit(state.entity, action)})
-        case EDIT_TAG_ADD_CHANGE:
-            return Object.assign({}, state, { 
-                tagEdit: { 
-                    tagAddingNames: action.values, 
-                    tagRemovingIndex: -1,
-                    addTagNameFilterValue: state.tagEdit.addTagNameFilterValue
-                }})
-        case EDIT_TAG_ADD_FILTER_CHANGE:
-            return Object.assign({}, state, { 
-                tagEdit: {
-                    addTagNameFilterValue: action.text,
-                    tagAddingNames: state.tagEdit.tagAddingNames, 
-                    tagRemovingIndex: -1
-                }})
-
         default: 
             return state
     }

@@ -12,14 +12,23 @@ const TagSearchBar = ({
     onUpdateTagSearch,
     onUpdateTagInput,
     changeLocationIfHome,
-    searchByTag
+    searchByTag,
+    doSearchOnUpdate,
+    onDeleteSearchRecord
 }) => {
     function renderChips(tags) {
         return tags.map((tag, i) => {
-            return <Chip onRequestDelete={() => onDeleteChip(tag)} key={i}
+            return <Chip onRequestDelete={
+                    () => {
+                        onDeleteChip(tag)
+                        if (doSearchOnUpdate) onDeleteSearchRecord(tag)
+                    }
+                    } 
+                key={i}
                 style={{margin: `1px`}}>{tag}</Chip>
         })
     }
+    let autoCompleteInput
         return (
         <div  className='h-100 d-flex align-items-center ' style={{flexWrap: 'wrap'}}>
                 {renderChips(inputTags)}
@@ -29,11 +38,14 @@ const TagSearchBar = ({
                     onUpdateInput={(text) => {
                         onUpdateTagSearch(text)
                     }}
+                    ref={(node) => autoCompleteInput = node}
                     onNewRequest={(req) => {
                         changeLocationIfHome()
+                        autoCompleteInput.focus()
                         onUpdateTagInput(req)
-                        searchByTag(req)
+                        if (doSearchOnUpdate) searchByTag(req)
                     }}
+                    menuCloseDelay={0}
                     dataSource={dataResource}
                     fullWidth={true}
                     style={{display: 'inline-block'}}

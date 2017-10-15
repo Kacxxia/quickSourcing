@@ -13,7 +13,7 @@ export function getUserProfile(req, res, next) {
             res.status(404).send()
         } else {
             obj = Object.assign({}, result._doc)
-            return Activity.find({user: id}, 'target type date').limit(10)
+            return Activity.find({user: id}, 'target type date').limit(10).sort({date: -1})
         }
     })
     .then(acResults => {

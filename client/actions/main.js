@@ -1,3 +1,5 @@
+import { createSearchAction } from 'redux-search'
+export const searchEntities = createSearchAction('entities')
 import { push } from 'react-router-redux'
 import {
     GET_TAGS_DONE,
@@ -22,7 +24,11 @@ import {
     DELETE_CHIP_CREATE_ENTITY,
     UPDATE_TAG_INPUT_CREATE_ENTITY,
     UPDATE_TAG_SEARCH_CREATE_ENTITY,
-    TOGGLE_DRAWER
+    TOGGLE_DRAWER,
+    ADD_ENTITY_OPEN_TAG_STORE,
+    ADD_ENTITY_ADD_TAG_FROM_STORE_CANCEL,
+    ADD_ENTITY_ADD_TAG_FROM_STORE_SUBMIT,
+    DELETE_SEARCH_RECORD
 } from './types'
 
 import {
@@ -42,23 +48,18 @@ function getEntities() {
 
 export function getTagsAndEntities() {
     return dispatch => {
-        Promise.all([getEntities(), getTags()])
+        return Promise.all([getTags(), getEntities()])
         .then((responses) => {
             if (responses[0].ok && responses[1].ok) {
-                let jsons = []
-                for (let i=0; i<responses.length; i++) {
-                    if (responses[i]){
-                        jsons.push(responses[i].json())
-                    }
-                }
-                return Promise.all(jsons)
+                return Promise.all([responses[0].json(), responses[1].json()])
             } else {
                 dispatch(mindError('网络错误'))
             }
         })
         .then((datas) => {
-            dispatch(getEntitiesDone(datas[0]))        
-            dispatch(getTagsDone(datas[1]))        
+            dispatch(getTagsDone(datas[0]))
+            dispatch(getEntitiesDone(datas[1]))
+            return Promise.resolve(null)     
         })
         .catch((error) => {
             dispatch(mindError(error.message))
@@ -221,14 +222,12 @@ export function postEntity(payload){
             .then((response) => {
                 if (response.ok) {
                     dispatch(postEntitySuccess())
-                    dispatch(getTagsAndEntities())
-                    setTimeout(() => {
-                        dispatch(clearInfo(payload.tags))
-                    }, 1000)
+                    return dispatch(getTagsAndEntities())
                 } else {
                     dispatch(mindError('网络错误'))
                 }
             })
+            .then(() => dispatch(clearInfo(payload.tags)))
             .catch((error) => {
                 dispatch(mindError(error.message))
             })
@@ -246,4 +245,28 @@ export function goHome() {
 
 export function goEntities() {
     return push('/entities')
+}
+
+export function addEntityOpenTagStore() {
+    return { type: ADD_ENTITY_OPEN_TAG_STORE }
+}
+export function addEntityAddTagFromStoreCancel() {
+    return { type: ADD_ENTITY_ADD_TAG_FROM_STORE_CANCEL }
+}
+export function addEntityAddTagFromStoreSubmit(payload) {
+    return { type: ADD_ENTITY_ADD_TAG_FROM_STORE_SUBMIT, payload }
+}
+
+
+export function searchByManyTags(tags) {
+    return dispatch => {
+        return tags.reduce((acc, tag) => {
+            acc = acc.then(() => dispatch(searchEntities(tag)))
+            return acc
+        }, Promise.resolve(null))
+    }
+}
+
+export function deleteSearchRecord(tag) {
+    return { type: DELETE_SEARCH_RECORD, tag}
 }

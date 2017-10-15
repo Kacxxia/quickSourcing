@@ -16,15 +16,17 @@ const TagSearchBarCreateEntity = ({
     searchByTagCreateEntity
 }) => {
     return (
-        <TagSearchBar 
-            dataResource={dataResource}
-            inputTags={inputTagsCreateEntity}
-            tagSearchText={tagSearchTextCreateEntity}
-            onDeleteChip={onDeleteChipCreateEntity}
-            onUpdateTagSearch={onUpdateTagSearchCreateEntity}
-            onUpdateTagInput={onUpdateTagInputCreateEntity}
-            changeLocationIfHome={changeLocationIfHomeCreateEntity}
-            searchByTag={searchByTagCreateEntity} />
+            <TagSearchBar 
+                dataResource={dataResource}
+                inputTags={inputTagsCreateEntity}
+                tagSearchText={tagSearchTextCreateEntity}
+                onDeleteChip={onDeleteChipCreateEntity}
+                onUpdateTagSearch={onUpdateTagSearchCreateEntity}
+                onUpdateTagInput={onUpdateTagInputCreateEntity}
+                changeLocationIfHome={changeLocationIfHomeCreateEntity}
+                searchByTag={searchByTagCreateEntity}
+                doSearchOnUpdate={false}
+            />
     );
 };
 

@@ -13,14 +13,11 @@ import { nextPage, prevPage, specificPage, updateTagFilter, updateNameFilter, ge
 
 import { breadGoEntity } from '../../actions/detail'
 class Entities extends Component {
-    componentDidMount(){
-        this.props.onClearBread()
-        this.props.onGetTagsAndEntities()
-    }
     render(){
         const maxDisplay = 8
         let filteredList = [...this.props.filteredEntities]
-        const length = Math.ceil(filteredList.length/maxDisplay)
+        let length = Math.ceil(filteredList.length/maxDisplay)
+        if (filteredList.length % maxDisplay === 0) length += 1
         let displayEntities = filteredList.splice(maxDisplay * (this.props.currentPage-1), maxDisplay)
 
         return (

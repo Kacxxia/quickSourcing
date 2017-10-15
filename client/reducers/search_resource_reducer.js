@@ -6,7 +6,8 @@ import {
     UPDATE_TAG_INPUT,
     UPDATE_TAG_SEARCH,
     SEARCH_RECEIVE_RESULT,
-    MODAL_CLEAR_INFO
+    MODAL_CLEAR_INFO,
+    REDUX_SEARCH_START
 } from '../actions/types'
 
 const INITIAL_STATE = {
@@ -22,7 +23,8 @@ const INITIAL_STATE = {
     inputTags: [],
     tagSearchText: '',
     tagFilter: [],
-    nameFilter: ''
+    nameFilter: '',
+    currentSearchText: ''
 }
 
 export default function(state = INITIAL_STATE, action) {
@@ -43,22 +45,24 @@ export default function(state = INITIAL_STATE, action) {
             { inputTags: state.inputTags.concat(action.text), tagSearchText: ''})
         case SEARCH_RECEIVE_RESULT:
             return Object.assign({}, state, 
-            { tagFilter: addTagID(state.tagFilter, action, state.inputTags[state.inputTags.length-1])})
+            { tagFilter: addTagID(state.tagFilter, action, state.currentSearchText)})
         case UPDATE_NAME_FILTER:
             return Object.assign({}, state, { nameFilter: action.payload})
         case MODAL_CLEAR_INFO:
-            return Object.assign({}, state, { inputTags: action.inputTags})
+            return Object.assign({}, state, { inputTags: action.inputTags, tagFilter: []})
+        case REDUX_SEARCH_START:
+            return Object.assign({}, state, 
+                { currentSearchText: action.payload.text})
         default:
             return state
     }
 }
 
-function addTagID(state, action, tag) {
-    if(tag){
-        const id = action.payload.result
-        return state.concat({tag, id})
-    }
-    return state
+function addTagID(state, action, currentSearchText) {
+    if (!currentSearchText) return state
+    const id = action.payload.result
+    return state.filter(tagid => tagid.tag !== currentSearchText).concat({tag: currentSearchText, id})
+
 }
 
 function filterTagID(origin, target) {

@@ -14,7 +14,9 @@ import {
     DELETE_CHIP_CREATE_ENTITY,
     UPDATE_TAG_INPUT_CREATE_ENTITY,
     UPDATE_TAG_SEARCH_CREATE_ENTITY,
-    TOGGLE_DRAWER
+    TOGGLE_DRAWER,
+    ADD_ENTITY_ADD_TAG_FROM_STORE_SUBMIT,
+    DELETE_SEARCH_RECORD
 } from '../actions/types'
 
 const INITIAL_STATE = {
@@ -49,7 +51,7 @@ export default function (state = INITIAL_STATE, action) {
             return Object.assign({}, state, 
             { add: updateResourceById(state.add, action)})
         case MODAL_CLEAR_INFO:
-            return Object.assign({}, state, {add: INITIAL_STATE.add})
+            return Object.assign({}, state, {add: INITIAL_STATE.add, entityName: '', currentPage: 1})
         case OPEN_CREATE_MODAL:
             return Object.assign({}, state, 
             { add: openModal(state.add), inputTags: action.initialTags})
@@ -72,6 +74,10 @@ export default function (state = INITIAL_STATE, action) {
         case UPDATE_TAG_INPUT_CREATE_ENTITY:
             return Object.assign({}, state, 
             { inputTags: state.inputTags.concat(action.text), tagSearchText: ''})
+        case ADD_ENTITY_ADD_TAG_FROM_STORE_SUBMIT:
+            return Object.assign({}, state, { inputTags: handleAddTagFromStore(state.inputTags, action.payload)})
+        case DELETE_SEARCH_RECORD:
+            return Object.assign({}, state, { inputTags: state.inputTags.filter(tagid => tagid.tag !== action.tag)})
         default: 
             return state
     }
@@ -103,4 +109,8 @@ function updateResourceField(state ={
 
 function openModal(state) {
     return Object.assign({}, state, { isModalOpen: true })
+}
+
+function handleAddTagFromStore(origin, payload) {
+    return [...new Set([...origin, ...payload])]
 }

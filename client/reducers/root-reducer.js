@@ -7,6 +7,7 @@ import { reducer as searchReducer } from 'redux-search'
 import entitiesReducer from './entities_reducer'
 import errorReducer from './error_reducer'
 import userReducer from './user_reducer'
+import commonReducer from './common_reducer'
 
 const rootReducer = combineReducers({
     auth: authReducer,
@@ -16,7 +17,8 @@ const rootReducer = combineReducers({
     search: searchReducer,
     entities: entitiesReducer,
     error: errorReducer,
-    user: userReducer
+    user: userReducer,
+    common: commonReducer
 })
 
 export default rootReducer
