@@ -57,6 +57,7 @@ export function autoLogIn() {
                     response.json().then((payload) => {
                         const { email, avatar, _id } = payload
                         const user = { email, avatar, _id }
+                        dispatch(getUserVoteInfo())
                         return dispatch({type: AUTH_USER, user: user})
                     })
                 }

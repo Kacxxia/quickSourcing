@@ -139,11 +139,7 @@ export function postVote(req, res, next) {
             return result.save()
         }
         else {
-            console.log(i)
-            console.log(result.votes[i])
             const originVotes = Object.assign({}, result.votes[i]._doc)
-            console.log('---------------')
-            console.log(originVotes)
             const update = {
                 _id: resourceId,
                 upVoted: chooseVote(upVote, originVotes.upVoted),
