@@ -1,9 +1,10 @@
 import jwt from 'jsonwebtoken'
-
+import mongoose from 'mongoose'
 import Entity from '../models/entity'
 import User from '../models/user'
 import Activity from '../models/activity'
 
+import { computeVendorCos } from '../utils'
 import { visitorId } from '../constants'
 export function getTags(req, res){
     Entity.getAllTags()
@@ -30,11 +31,19 @@ export function getDetail(req, res, next){
     .findById(req.params.id)
     .sort({
         "resource.level": -1,
-        "resoource.good": -1,
+        "resource.good": -1,
         "resource.bad": 1,
         "resource.outdated": 1 
-    })  
+    })
+    .then(result => {
+        const opts = {
+            path: 'relatedEntities',
+            select: 'name _id'
+        }
+        return Entity.populate(result, opts)
+    })
     .then((result) => {
+        console.log(result)
         const resourceList = result.resource
         entityDetail = Object.assign({}, result._doc, { resource: {}})
         resourceList.forEach((r) => {
@@ -49,7 +58,6 @@ export function getDetail(req, res, next){
     })
     .then(cons => {
         entityDetail.contributors = cons.contributors
-
         res.status(200).json(entityDetail)
     })
     .catch((error) => {
@@ -342,4 +350,52 @@ export function postEdit(req, res, next) {
         return next(err)
     })
 
+}
+
+
+export function generateRelatedEntities() {
+    generateRelatedEntitiesmain()
+    setTimeout(generateRelatedEntitiesmain, 3600000)
+}
+
+function generateRelatedEntitiesmain() {
+    let entityTagVendor = {}
+    let tagsCount = 0
+    let tagsMap = {}
+    Entity.getAllTags()
+    .then(tags => {
+        tagsCount = tags.length
+        tags.forEach((tag, i) => {
+            tagsMap[tag] = i
+        })
+        return Entity.find({}, '_id tags name')
+    })
+    .then(entities => {
+        entities.forEach(entity => {
+            entityTagVendor[entity._id.toString()] = Array(tagsCount).fill(0)
+            entity.tags.forEach(tag => {
+                entityTagVendor[entity._id.toString()][tagsMap[tag]] = 1
+            })
+        })
+        return entities
+    })
+    .then(entities => {
+        entities.forEach((entity) => {
+            let related = []
+            for (let i in entityTagVendor) {
+                if (entity._id.toString() !== i) {
+                    related.push({
+                        targetId: i,
+                        cos: computeVendorCos(entityTagVendor[entity._id.toString()], entityTagVendor[i])
+                    })
+                }
+            }
+            let relatedIds = related.filter(t => t.cos !== 0).sort((a,b) => (1 - a.cos) - (1 - b.cos)).map(t => mongoose.Types.ObjectId(t.targetId))
+            entity.relatedEntities = relatedIds
+        })
+        return Promise.all(entities.map(entity => {
+            return entity.save()
+        }))
+    })
+    .catch(err => console.log(err))
 }

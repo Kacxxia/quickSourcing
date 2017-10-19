@@ -104,3 +104,11 @@ export function generateHtmlMail(captcha) {
     </tr>
     </tbody></table>`
 }
+
+export function computeArraySum(array) {
+    return array.reduce((acc, value) => acc + value, 0)
+}
+
+export function computeVendorCos(a, b) {
+    return computeArraySum(a.map((value, index) => value * b[index])) / (computeArraySum(a.map(value => value * value)) * computeArraySum(b.map(value => value * value)))
+}

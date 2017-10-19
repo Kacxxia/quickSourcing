@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { List, ListItem } from 'material-ui/List'
-import Subheader from 'material-ui/Subheader'
+// import Subheader from 'material-ui/Subheader'
 import RaisedButton from 'material-ui/RaisedButton'
 import Waiting from '../general/waiting'
 import LevelItems from './level-items'
@@ -20,9 +20,8 @@ const LevelList = ({
 }) => {
     return (
             <List >
-                <div className='d-flex'>
-                    <Subheader style={{display: 'inline-block', width: 'auto', height: '100%', lineHeight: 'initial', marginRight: '1rem'}}>
-                        <h1 style={{margin: 0, display: 'inline-block', height: '100%'}}>层次</h1></Subheader>
+                <div className='d-flex align-items-center'>
+                        <h2 style={{margin: '0 1rem 0 0', display: 'inline-block', height: '100%'}}>层次</h2>
                     <RaisedButton 
                         primary={showSubordinate}
                         label='子级'

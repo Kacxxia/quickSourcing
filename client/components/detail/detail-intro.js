@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
+import { push } from 'react-router-redux'
 
 import Paper from 'material-ui/Paper'
 import Chip from 'material-ui/Chip'
@@ -11,6 +12,7 @@ import Dialog from 'material-ui/Dialog'
 import RaisedButton from 'material-ui/RaisedButton'
 
 import LevelList from './level-list'
+import RelatedEntities from './related-entities'
 import TagStore from '../general/tag-store'
 
 import { 
@@ -34,8 +36,10 @@ const DetailIntro = ({
     onEditTagRemoveStart,
     onEditTagAddCancel,
     onEditTagRemoveCancel,
+    onClickRelatedEntity,
     tagRemovingIndex
 }) => {
+    const relatedEntitiesCount = window.innerWidth < 576 ? 5 : 12
     return (
         <div className="h-100 container-fluid">
             <div className='row h-100'>
@@ -56,6 +60,10 @@ const DetailIntro = ({
                 </div>
                 <div  className="col-12 col-sm-9">
                     <LevelList  matchId={match.params.id}/>
+                    <RelatedEntities 
+                                payload={entity.relatedEntities.slice(0, relatedEntitiesCount)}
+                                onClickRelatedEntity={onClickRelatedEntity}
+                    />
                 </div>
             </div>
                 <RenderEditTagDialog
@@ -83,7 +91,8 @@ export default connect(state => {
         onEditTagAddStart: () => dispatch(editTagAddStart()),
         onEditTagRemoveStart: (index) => dispatch(editTagRemoveStart(index)),
         onEditTagAddCancel: () => dispatch(editTagAddCancel()),
-        onEditTagRemoveCancel: () => dispatch(editTagRemoveCancel())
+        onEditTagRemoveCancel: () => dispatch(editTagRemoveCancel()),
+        onClickRelatedEntity: (id) => dispatch(push(id))
     }
 })(DetailIntro);
 

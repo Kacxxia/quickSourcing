@@ -93,7 +93,7 @@ export default function (state = INITIAL_STATE, action) {
         case RECOVER_USER_CLICK_BACK_STATUS:
             return Object.assign({}, state, {canUserClickBackButton: true})
         case CLEAR_DETAIL: 
-            return Object.assign({}, INITIAL_STATE, {breads: state.breads, canUserClickBackButton: state.canUserClickBackButton})
+            return Object.assign({}, INITIAL_STATE, {breads: state.breads, canUserClickBackButton: state.canUserClickBackButton, showResource: state.showResource})
         case CHANGE_SHOW_RESOURCE: 
             return Object.assign({}, state, { showResource: !state.showResource })
         case GET_DETAIL_DONE:

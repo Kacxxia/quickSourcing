@@ -7,8 +7,9 @@
     "client": "webpack-dev-server ",
     "server:dev": "nodemon --watch server server/server.js --exec babel-node --presets es2015,react,stage-0",
     "server:prod": "NODE_ENV=production nodemon --watch server server/server.js --exec babel-node --presets es2015,react,stage-0",
+    "server:debug": "nodemon --inspect --watch server server/server.js --exec babel-node --presets es2015,react,stage-0",
     "analyze": "webpack -p --profile --json > stats.json",
-    "build": "webpack -p --config webpack.prod.config.js"
+    "build": "webpack -p --config webpack.prod.config.js"    
   },
   "keywords": [],
   "author": "",

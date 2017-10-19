@@ -22,7 +22,11 @@ const entitySchema = new Schema({
         ref: "User"
     }],
     shares: [shareSchema],
-    comments: [commentSchema]
+    comments: [commentSchema],
+    relatedEntities: [{
+        type: Schema.Types.ObjectId,
+        ref: "Entity"
+    }]
 })
 
 class entity {

@@ -3,10 +3,12 @@ import mongoose from 'mongoose'
 import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import passport from 'passport'
+import path from 'path'
 import favicon from 'serve-favicon'
+
+import { generateRelatedEntities } from './controller/entity'
 import config from './config/main'
 import router from './router'
-import path from 'path'
 import errorHandler from './models/error-handler'
 mongoose.connect(config.database)
 
@@ -20,6 +22,7 @@ app.use(bodyParser.text())
 app.use(morgan('dev'))
 app.use(passport.initialize())
 
+generateRelatedEntities()
 
 app.listen(config.port, () => {
     console.log(`server is listening on port ${config.port}`)
