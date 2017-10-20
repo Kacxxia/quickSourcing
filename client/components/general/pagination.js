@@ -27,11 +27,11 @@ const Pagination = ({
                 onTouchTap={() => onPrevPage()}
                 disabled={leftDisabled}
             />
-            {pages.map((page) => {
+            {computePages(currentPage, length, displayPages).map((page) => {
                 return <FlatButton 
                     onTouchTap={() => onSpecPage(page)} 
                     label={page}
-                    primary={page === currentPage} 
+                    secondary={page === currentPage} 
                     key={page}/>
             })}
             <FlatButton 
@@ -55,42 +55,27 @@ Pagination.propTypes = {
 
 function computePages(currentPage, length, displayPages) { 
     let pages = []
-    const   half = (displayPages-1)/2,
-       rest = length - currentPage
-    if (length <= displayPages) {
-        for (let i=0; i<length; i++) {
-            pages.push(i+1)
-        }
-    } else {
-        if (currentPage <= 5) {
-            for (let i=0; i<displayPages; i++) {
-                pages.push(i+1)
-            }
-        } else {
-            if ( rest >= half) {
-                for (let i=0; i<displayPages; i++) {
-                    pages.push(currentPage - half + i)
-                }
-            } else {
-                for (let i=0; i<displayPages; i++) {
-                    pages.push(rest + 1 + i)
-                }
-            }
-        }
+    const halfDisplay = Math.floor(displayPages / 2)
+    let leftEnd = currentPage - halfDisplay < 1 ? 1 : currentPage - halfDisplay
+    let rightEnd = currentPage + halfDisplay > length ? length : currentPage + halfDisplay
+    if (rightEnd - leftEnd + 1 < displayPages) {
+        let need = displayPages - (rightEnd - leftEnd + 1)
+        rightEnd = rightEnd + need > length ? length : rightEnd + need
+        leftEnd = leftEnd - need < 1 ? 1 : leftEnd - need
     }
-    return pages
+    for (let i = leftEnd; i <= rightEnd; i++) {
+        pages.push(i)
+    }
+    return pages    
 }
 
 function chooseDisplayPages() {
     const width = window.innerWidth
-    if (width <= 280) {
-        return 3
-    }
     if (width <= 340 ) {
-        return 5
+        return 1
     } 
-    if (width <= 416) {
+    if (width <= 414) {
+        return 3
+    } 
         return 7
-    } 
-        return 9
 }
