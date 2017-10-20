@@ -55,8 +55,11 @@ const AuthSignComponent = ({
             open={isSigning}
             onRequestClose={onAuthSignCancel}
             repositionOnUpdate={false}
-            autoScrollBodyContent={true}
-            style={{zIndex: 2000}}
+            autoDetectWindowHeight={false}
+            style={{
+               zIndex: 2000,
+               overflowY: 'visible'
+            }}
         >
             {renderComponent(isSignIn, attributes, SignUpComponent, SignInComponent)}
         </Dialog>
