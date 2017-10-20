@@ -45,7 +45,7 @@ class App extends Component {
                     modal={true}
                     open={this.props.isCreateModalOpen}
                     onRequestClose={this.props.onClearInfo}
-                    style={{ top: `-185px`}}
+                    style={{ top: `-9rem`}}
                     autoScrollBodyContent={true}
                 >
                     <ModalContent />

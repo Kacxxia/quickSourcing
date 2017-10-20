@@ -24,7 +24,7 @@ class Home extends Component {
                     <h1  style={{height: `10%`, margin: 0}}>
                         quickSourcing
                     </h1>
-                    <div style={{height: `10%`, width: '80%'}} >
+                    <div style={{height: 'auto', width: '80%'}} >
                         <TagSearchBarMain />
                     </div>
                     <div style={{height: '10%', marginTop: `1rem`}} className='d-flex align-items-center justify-content-center'>
