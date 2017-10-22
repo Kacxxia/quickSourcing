@@ -19,7 +19,7 @@ const MoreResource = ({list, onShowDetailResource, onAddResource}) => {
         <div>
             <h3>推荐资源</h3>
             <Divider />
-            <div className='d-flex'>
+            <div className='d-flex flex-wrap'>
                 {renderTopList(topList, onShowDetailResource)}
             </div>
             <div className='d-flex align-items-center' style={{padding: '1.5rem 0'}}>
@@ -34,7 +34,7 @@ const MoreResource = ({list, onShowDetailResource, onAddResource}) => {
                 </FloatingActionButton>
             </div>
             <Divider />
-            <div>
+            <div className='d-flex flex-wrap'>
                 {renderCandidatedList(candidatedList, onShowDetailResource)}
             </div>
         </div>

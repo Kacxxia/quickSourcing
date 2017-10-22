@@ -430,7 +430,6 @@ export function editEntity() {
     return {type: EDIT_START}
 }
 
-
 function editEntityDone() {
     return { type: EDIT_DONE}
 }

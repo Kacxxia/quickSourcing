@@ -13,9 +13,17 @@ const ErrorDiv = ({
     return (
         <SnackBar 
             open={status}
-            message={message || stack || '未知错误'}
+            message={message || stack || ''}
             onRequestClose={onCloseError}
             autoHideDuration={4000}
+            style={{
+                top: 0,
+                bottom: 'auto',
+                left: (window.innerWidth - 288) / 2,
+                transform: message || stack ?
+                    'translate3d(0, 0, 0)' :
+                    `translate3d(0, -50px, 0)`
+            }}
         />
     );
 };

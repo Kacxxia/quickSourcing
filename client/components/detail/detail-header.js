@@ -8,6 +8,8 @@ import RaisedButton from 'material-ui/RaisedButton'
 import BreadCrumbs from '../general/bread-crumbs'
 import ToolBar from './tool-bar'
 
+import { needAuthPopoverOpen } from '../../actions/auth' 
+
 import { 
     editEntity, 
     editEntityCancel, 
@@ -16,7 +18,7 @@ import {
     editCancelQuit
  } 
 from '../../actions/detail'
-const DetailHeader = ({editStatus, onCancelClick, onSubmitClick, onEditClick, onEditCancelQuit, onEditCancelConfirm}) => {
+const DetailHeader = ({editStatus, onCancelClick, onSubmitClick, onEditClick, onEditCancelQuit, onEditCancelConfirm, authenticated}) => {
     const editCancelChooseActions = [
         <RaisedButton 
             label='取消'
@@ -37,7 +39,7 @@ const DetailHeader = ({editStatus, onCancelClick, onSubmitClick, onEditClick, on
             <div className='col-4 col-sm-4 h-100'>
                 <ToolBar editStatus={editStatus}
                     onCancelClick={onCancelClick}
-                    onEditClick={onEditClick}
+                    onEditClick={(e) => onEditClick(e, authenticated)}
                     onSubmitClick={onSubmitClick}
                     />
             </div>
@@ -52,9 +54,19 @@ const DetailHeader = ({editStatus, onCancelClick, onSubmitClick, onEditClick, on
     );
 };
 
-export default connect(null, dispatch => {
+export default connect(state => {
     return {
-        onEditClick: () => dispatch(editEntity()),
+        authenticated: state.auth.authenticated
+    }
+}, dispatch => {
+    return {
+        onEditClick: (event, authenticated) => {
+            if (!authenticated) {
+                dispatch(needAuthPopoverOpen(event.target, '认为有不正确的描述？'))
+            } else {
+                dispatch(editEntity())                
+            }
+        },
         onSubmitClick: () => dispatch(editEntitySubmit()),
         onCancelClick: () => dispatch(editEntityCancel()),
         onEditCancelQuit: () => dispatch(editCancelQuit()),
