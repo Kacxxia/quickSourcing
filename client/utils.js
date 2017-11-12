@@ -137,5 +137,5 @@ export function getCurrentIp(perfer) {
 
     perfer = perfer === undefined ? '' : perfer.toLowerCase()
     
-    return perfer ? ifaces[perfer].filter(iface => iface.family.toLowerCase() == 'ipv4')[0].address : ifaces[connectedIfaces[0]].filter(iface => iface.family.toLowerCase() == 'ipv4')[0].address
+    return perfer !== '' ? ifaces[perfer].filter(iface => iface.family.toLowerCase() == 'ipv4')[0].address : ifaces[connectedIfaces[0]].filter(iface => iface.family.toLowerCase() == 'ipv4')[0].address
 }

@@ -4,7 +4,7 @@ import nodeMailer from 'nodemailer'
 import config from './config/main'
 
 
-export const API_URL = process.env.NODE_ENV === 'production' ?`http://${getCurrentIp()}:80/api` :  'http://localhost:3000/api'
+export const API_URL = process.env.NODE_ENV === 'production' ?`http://45.32.66.151:80/api` :  'http://localhost:3000/api'
 
 export const mailTransporter = nodeMailer.createTransport({
     host: 'smtp.qq.com',
@@ -123,5 +123,5 @@ export function getCurrentIp(perfer) {
 
     perfer = perfer === undefined ? '' : perfer.toLowerCase()
     
-    return perfer ? ifaces[perfer].filter(iface => iface.family.toLowerCase() == 'ipv4')[0].address : ifaces[connectedIfaces[0]].filter(iface => iface.family.toLowerCase() == 'ipv4')[0].address
+    return perfer !== '' ? ifaces[perfer].filter(iface => iface.family.toLowerCase() == 'ipv4')[0].address : ifaces[connectedIfaces[0]].filter(iface => iface.family.toLowerCase() == 'ipv4')[0].address
 }
