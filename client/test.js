@@ -1,21 +1,9 @@
-const os = require('os')
-const ifaces = os.networkInterfaces()
+const dns = require('dns')
 
-const obj = {
-    wlan: '1'
-}
-
-function test(perfer) {
-    const ifaces = os.networkInterfaces()
-    const connectedIfaces = Object.keys(ifaces).filter(ifname => {
-        return ifname.toLowerCase().includes('wlan') || ifname.toLowerCase().includes('eth')
+function resolveDns(domain) {
+     dns.resolve4(domain, (err, address) => {
+        if (err) throw err
+        return address
     })
-
-    console.log(connectedIfaces)
-
-    perfer = perfer === undefined ? '' : perfer.toLowerCase()
-    
-    return perfer ? ifaces[perfer].filter(iface => iface.family.toLowerCase() == 'ipv4')[0].address : ifaces[connectedIfaces[0]].filter(iface => iface.family.toLowerCase() == 'ipv4')[0].address
 }
-
-console.log(test())
+console.log(resolveDns('quicksourcing.info'))

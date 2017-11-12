@@ -1,4 +1,4 @@
-import os from 'os'
+import dns from 'dns'
 import { createSelector } from 'reselect'
 
 
@@ -127,15 +127,9 @@ export function chooseConfirmPasswordErrorText(status, text, originPwd) {
 
 }
 
-export function getCurrentIp(perfer) {
-    const ifaces = os.networkInterfaces()
-    const connectedIfaces = Object.keys(ifaces).filter(ifname => {
-        return ifname.toLowerCase().includes('wlan') || ifname.toLowerCase().includes('eth')
+export function resolveDns(domain) {
+    return dns.resolve4(domain, (err, address) => {
+        if (err) throw err
+        return address
     })
-
-    console.log(connectedIfaces)
-
-    perfer = perfer === undefined ? '' : perfer.toLowerCase()
-    
-    return perfer !== '' ? ifaces[perfer].filter(iface => iface.family.toLowerCase() == 'ipv4')[0].address : ifaces[connectedIfaces[0]].filter(iface => iface.family.toLowerCase() == 'ipv4')[0].address
 }
